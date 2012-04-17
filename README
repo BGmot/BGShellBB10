@@ -1,0 +1,10 @@
+This is an experimental work (QT port of Konsole and BlackBerry¨ PlayBookª 
+Native development) which brings you an ordinary shell terminal window which 
+I was missing a lot being an *nix guy. For now just some basic commands are 
+available like ls, echo, uname (try what else you can find). The software 
+is 'work and progress', provided 'as is' and any comments are very welcome!
+BGshell is available for free at BlackBerry AppWorld if you want to try it
+on your Playbook without bothering to compile. These sources are meant to be 
+imported into QNX¨ Momentics IDE for BlackBerry¨ Native SDK for Tablet OS 
+to be built and deployed to Playbook. Qt libraries and libblackberry.so are 
+needed for this application to run properly.
