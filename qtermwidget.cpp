@@ -208,7 +208,7 @@ void QTermWidget::sendText(QString &text)
 
 void QTermWidget::resizeEvent(QResizeEvent*)
 {
-//qDebug("global window resizing...with %d %d", this->size().width(), this->size().height());
+//+++qDebug("global window resizing...with %d %d", this->size().width(), this->size().height());
 	m_impl->m_terminalDisplay->resize(this->size());
 }
 
@@ -216,7 +216,7 @@ void QTermWidget::resizeEvent(QResizeEvent*)
 
 void QTermWidget::sessionFinished()
 {
-	//+++ We want to hid virtual keyboard before we exit
+	//+++ We want to hide virtual keyboard before we exit
 	QEvent event(QEvent::CloseSoftwareInputPanel);
 	QApplication::sendEvent(m_impl->m_terminalDisplay, &event);
     emit finished();

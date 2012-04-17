@@ -13,6 +13,8 @@ class CMyMenu : public QWidget
 public:
     CMyMenu(QWidget *parent);
     int MenuInit();
+    void SetGeometryPortrait();
+    void SetGeometryLandscape();
 	//void focusOutEvent( QFocusEvent * event );
 private:
     QPushButton *btnCtrlC;
