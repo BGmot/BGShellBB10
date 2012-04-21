@@ -66,13 +66,13 @@ void CMyMenu::SetGeometryPortrait(){
     */
 	QRect r = QApplication::desktop()->screenGeometry(0);
 	this->setGeometry(0, 0, r.width(), 53);
-	btnCtrlC->setGeometry(QRect(2, 1, 74, 51));
-	btnTab->setGeometry(QRect(78, 1, 61, 51));
-	btnLeft->setGeometry(QRect(141, 1, 61, 51));
-	btnRight->setGeometry(QRect(204, 1, 61, 51));
-	btnUp->setGeometry(QRect(266, 1, 61, 51));
-	btnDown->setGeometry(QRect(329, 1, 61, 51));
-	btnEsc->setGeometry(QRect(392, 1, 61, 51));
+	btnCtrlC->setGeometry(QRect(2, 1, 95, 51));
+	btnTab->setGeometry(QRect(97, 1, 82, 51));
+	btnLeft->setGeometry(QRect(181, 1, 82, 51));
+	btnRight->setGeometry(QRect(265, 1, 82, 51));
+	btnUp->setGeometry(QRect(349, 1, 82, 51));
+	btnDown->setGeometry(QRect(433, 1, 82, 51));
+	btnEsc->setGeometry(QRect(517, 1, 82, 51));
 }
 void CMyMenu::SetGeometryLandscape(){
 	this->setGeometry(950, 0, 73, 357);
