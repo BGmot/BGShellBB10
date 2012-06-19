@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
           sigaction(sig, &act, 0L);
 
         // All we want in child process is to have sh running
-        const char *arglist[] = {"/bin/sh", NULL};
+        const char *arglist[] = {"/bin/sh", "-l", NULL};
         execvp(arglist[0], (char**)arglist);
     } else if (pidG_ == -1) {
         // fork() failed
