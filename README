@@ -1,7 +1,8 @@
-This is an experimental work (QT and BlackBerry PlayBook Native development) which brings you an ordinary shell terminal window which I was missing a lot being an *nix guy. For now just some basic commands are available like ls, echo, uname even vi (try what else you can find). The software is 'work and progress' (alfa version), provided 'as is' and any comments are very welcome!
-For ssh support please consider buying BG SSH-SCP-SFTP. Have a question? then please e-mail to support@tm-k.com
+Provides you with an ordinary terminal window, i.e. sh running on your BlackBerry PlayBook plus gives you command line ssh, scp and sftp utilities. These utilities are just ports of what you use on any Linux/BSD system so provide (almost) the same functionality and accept the same parameters. Have a question? then please e-mail to support@tm-k.com
+DISCLAIMER: Utilities perform encryption/decryption that might be illegal in your country, it is your responsibility to obey law.
+This is an experimental work (QT and BlackBerry PlayBook/BB10 Native development) which brings you an ordinary shell terminal window which I was missing a lot being an *nix guy. For now just some basic commands are available like ls, echo, uname (try what else you can find). The software is 'work and progress' (alfa version), provided 'as is' and any comments are very welcome!
+Have a question? then please e-mail to support@tm-k.com
 Release notes:
-- 0.0.0.6 - the first Release
-- 0.0.1.0 - soft buttons added; show/hide Virtual Keyboard changes available terminal space
-- 0.0.1.2 - screen layout changes with Playbook's orientation change
-- 0.0.1.3 - read ~/.profile when starting
+- 0.0.0.5 - the first Release
+- 0.0.0.6 - read ~/.profile when starting
+- 0.0.0.600 - port to BB 10.0.9

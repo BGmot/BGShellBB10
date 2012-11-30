@@ -21,68 +21,71 @@
 
 #include <QtCore>
 #include <QtGui>
-#include <QApplication>
-#include <QtGui/private/qwindowsysteminterface_qpa_p.h>
+#include <QtGui/QApplication>
 #include <fcntl.h>
 #include "qtermwidget.h"
 #include "mymenu.h"
-//#include "qbbvirtualkeyboard.h"
-//#include <QDebug>
-
+#include "bps/virtualkeyboard.h"
+#include "bps/bps.h"
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
 int pidG_ = -1;     // child's PID
-int nKBHeight = 0;  // Virtual Keyboard height
+int nKBHeight = 0;  // current Virtual Keyboard height
+//int nAngle = 0;     // current Angle
+int nMaxKBHeight = 0; // Maximum Keyboard Height in current mode (Landscape/Portrait)
 QTermWidget *console; // our 'main' widget, let's make it global so it is available in Menu widget
 QMainWindow *mainWindow;
 CMyMenu *Menu;      // Menu with soft buttons
+QFont font;
 bool bOrientationJustChanged = false; // If we just changed screen orientation then do not handle hide/show keyboard event (skip one ScreenAvailableGeometry event)
+bool bKBhidden = false; // True if VK is not shown
+
+static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
 bool myEventFilter(void *message) {
-	// I don't know the other way to detect user's 'show/hide virtual keyboard', so let's catch all events
-	QWindowSystemInterfacePrivate::WindowSystemEvent *msg;
-	msg = (QWindowSystemInterfacePrivate::WindowSystemEvent*)message;
-	//qDebug() << "+++event type:" << msg->type;
-	if (msg->type == QWindowSystemInterfacePrivate::ScreenAvailableGeometry){
-		// VK has been hidden/showed, let's update stored VKB height and change available console's space
-		//qDebug()<<"myeventfilter msg->type = ScreenAvailableGeometry";
-		//nKBHeight = QBBVirtualKeyboard::instance().getHeight(); - nasty hack, does not work at Simulator -(( Don't know other way
-		if (!bOrientationJustChanged){
-			QRect r = QApplication::desktop()->screenGeometry(0);
-			if (r.width() > 700){
-				nKBHeight == 0 ? nKBHeight = 244 : nKBHeight = 0; // Landscape
-				console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
-			}else{
-				nKBHeight == 0 ? nKBHeight = 264 : nKBHeight = 0; // Portrait - keyboard is taller
-				console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53);
-			}
-		}else
-			bOrientationJustChanged = false;
-	}else if (msg->type == QWindowSystemInterfacePrivate::ScreenGeometry){
-		// Orientation changed
-		QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
-		mainWindow->resize(r.width()+1, r.height()+1);
+	// here we should have all requested bps events (no Qt events here)
+    bps_event_t *event = (bps_event_t*)message;
+    if (event) {
+    	int domain = bps_event_get_domain(event);
+    	if (domain == virtualkeyboard_get_domain()) {
+    		unsigned int ec = bps_event_get_code(event);
+    		 if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
+    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_INFO\n");
+    			int nNewKBHeight = virtualkeyboard_event_get_height(event);
+    			virtualkeyboard_get_height(&nNewKBHeight);
+    			if ( nNewKBHeight != nKBHeight){
+    				nKBHeight = nNewKBHeight;
+    				QRect r = QApplication::desktop()->screenGeometry(0);
+    				if (r.width() > 800){
+    					// Landscape
+    					console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
+    				}else{
+    					// Portrait - keyboard is taller
+    					console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53);
+    				}
+    			}
+    		}
+    		QRect r = QApplication::desktop()->screenGeometry(0);
+    		if (ec == VIRTUALKEYBOARD_EVENT_VISIBLE){
+    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_VISIBLE\n");
+				bKBhidden = false;
+				nKBHeight = nMaxKBHeight;
+    		}else if (ec == VIRTUALKEYBOARD_EVENT_HIDDEN){
+    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_HIDDEN\n");
+				bKBhidden = true;
+				nKBHeight = 0;
+    		}
+			if (r.width() > 800) console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight); // Landscape
+			else console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53); // Portrait
 
-		if (r.width() > 700){
-			// Landscape
-			if (nKBHeight > 0) nKBHeight = 244; // only if VK is currently shown - VK is lower when in Landscape
-			console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
-			Menu->SetGeometryLandscape();
-		}else{
-			// Portrait
-			if (nKBHeight > 0) nKBHeight = 264; // only if VK is currently shown - VK is taller when in Portrait
-			console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53);
-			Menu->SetGeometryPortrait();
-		}
-		bOrientationJustChanged = true;
-
-		// For some reason font is screwed when orientation changes, let's fix 'constant width'
-		QFont font = console->font();
-		font.setStyleStrategy(QFont::ForceIntegerMetrics); // we must do it to get normal cursor functionality
-	    console->setTerminalFont(font);
-	}
-
+			font = QFont(QString("Courier New"), 6);
+		    font.setStyle(QFont::StyleNormal);
+		    font.setWeight(QFont::Normal);
+			console->setTerminalFont(font);
+    	}
+   	}
+ 	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
 	return false;
 }
 
@@ -92,6 +95,13 @@ int main(int argc, char *argv[])
     QString oldPath = qgetenv("PATH");
     QString newPath = "app/native:"+oldPath;
     qputenv("PATH", newPath.toAscii().data());
+
+    // We need to store our working folder somewhere, it is needed for ssh later
+    int res = system ("echo -n `pwd`\"/data/\" > data/.myhome");
+    if (res == -1){
+    	fprintf(stderr, "Can't determine my home folder location, terminating");
+    	exit(-1);
+    }
 
 	// Init file descriptors opening proper devices
 	masterFdG = ::open("/dev/ptyp1", O_RDWR);
@@ -121,35 +131,39 @@ int main(int argc, char *argv[])
         return false;
     }
     // Drop garbage that is shown when you start the app
-    char cGarbage[63];
-    read(masterFdG, cGarbage, 63);
+    char cGarbage[72];
+    read(masterFdG, cGarbage, 72);
 
-    qputenv("QT_QPA_FONTDIR", "/usr/fonts/font_repository/monotype"); // needed for correct QT initialization
+    // needed for correct QT initialization
+    //qputenv("QT_QPA_FONTDIR", "/usr/fonts/font_repository/dejavu-ttf-2.17"); // needed for correct QT initialization
 
-    QCoreApplication::addLibraryPath("app/native/lib"); // blackberry plugin does not load without this line
+    qputenv("QT_QPA_PLATFORM_PLUGIN_PATH", "/usr/lib/qt4/plugins/platforms");
+
+    //QCoreApplication::addLibraryPath("app/native/lib"); // blackberry plugin does not load without this line
 
     QApplication app(argc, argv);
 
     mainWindow = new QMainWindow();
-    QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
+    QRect r = QApplication::desktop()->screenGeometry(0);
     mainWindow->resize(r.width()+1, r.height()+1);
 
     console = new QTermWidget(1, mainWindow);
 
+    font = QFont(QString("Courier New"), 6);
+    font.setStyle(QFont::StyleNormal);
+    font.setWeight(QFont::Normal);
+	console->setTerminalFont(font);
+
     // We start the app with shown keyboard
-	if (r.width() > 700){
-		nKBHeight = 244; // Landscape
+	if (r.width() > 800){
+		// Landscape
+		virtualkeyboard_get_height(&nKBHeight);
 		console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
 	}else{
-		nKBHeight = 264; // Portrait - keyboard is higher
+		// Portrait - keyboard is higher
+		virtualkeyboard_get_height(&nKBHeight);
 		console->setGeometry(0, 53, r.width()+1, r.height()-nKBHeight-52);
 	}
-
-	QFont font = QApplication::font();
-    //font.setFamily("Terminus");
-    font.setPointSize(14);
-    font.setStyleStrategy(QFont::ForceIntegerMetrics); // we must do it to get normal cursor functionality
-    console->setTerminalFont(font);
 
     console->setScrollBarPosition(QTermWidget::ScrollBarRight);
 
@@ -162,12 +176,14 @@ int main(int argc, char *argv[])
     mainWindow->show();    
 
     // Install event filter
-    QAbstractEventDispatcher *aed = QAbstractEventDispatcher::instance(app.thread());
-    aed->setEventFilter(myEventFilter);
+    mainEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(myEventFilter);
 
     // Show virtual keyboard
     QEvent event(QEvent::RequestSoftwareInputPanel);
     QApplication::sendEvent(console, &event);
+    virtualkeyboard_get_height(&nMaxKBHeight); // Init maximum VK height
+
+    virtualkeyboard_request_events(0); // To catch show/hide VK events
 
     return app.exec();
 }

@@ -179,7 +179,7 @@ void TerminalDisplay::fontChange(const QFont&)
   int fw = fm.width(REPCHAR[0]);
   for(unsigned int i=1; i< strlen(REPCHAR); i++)
   {
-    if (fw != fm.width(REPCHAR[i]))
+     if (fw != fm.width(REPCHAR[i]))
     {
       _fixedFont = false;
       break;
@@ -473,7 +473,7 @@ void TerminalDisplay::drawLineCharString(	QPainter& painter, int x, int y, const
 			boldPen.setWidth(3);
 			painter.setPen( boldPen );
 		}	
-		
+//+++_fontWidth=15;//+++
 		for (int i=0 ; i < str.length(); i++)
 		{
 			uchar code = str[i].cell();
@@ -2424,6 +2424,7 @@ QVariant TerminalDisplay::inputMethodQuery( Qt::InputMethodQuery query ) const
 bool TerminalDisplay::event( QEvent *e )
 {
 //+++qDebug()<<"TerminalDisplay::event() type="<<e->type();
+//+++fprintf(stderr, "TerminalDisplay::event() type=%d\n", e->type());
   if ( e->type() == QEvent::ShortcutOverride )
   {
     QKeyEvent* keyEvent = static_cast<QKeyEvent *>( e );

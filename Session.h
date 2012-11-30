@@ -30,7 +30,7 @@
 // Qt
 #include <QtCore/QStringList>
 #include <QtCore>
-#include <QWidget>
+#include <QtGui/QWidget>
 
 // Konsole
 #include "History.h"

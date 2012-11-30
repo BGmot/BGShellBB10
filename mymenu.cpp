@@ -3,7 +3,6 @@
  */
 
 #include <fcntl.h>
-#include <QDebug>
 #include "mymenu.h"
 #include "qtermwidget.h"
 
@@ -17,37 +16,37 @@ QWidget(parent)
 
 // There is nothing to comment here, all button names tell you what they do
 int CMyMenu::MenuInit(){
-	btnCtrlC = new QPushButton(this);
+	btnCtrlC = new QToolButton(this);
     btnCtrlC->setObjectName(QString::fromUtf8("btnCtrlC"));
     btnCtrlC->setText(QString("Ctrl+C"));
 
-	btnTab = new QPushButton(this);
+	btnTab = new QToolButton(this);
     btnTab->setObjectName(QString::fromUtf8("btnTab"));
     btnTab->setText(QString("Tab"));
 
-    btnLeft = new QPushButton(this);
+    btnLeft = new QToolButton(this);
     btnLeft->setObjectName(QString::fromUtf8("btnLeft"));
     btnLeft->setText(QString("<"));
 
-    btnRight = new QPushButton(this);
+    btnRight = new QToolButton(this);
     btnRight->setObjectName(QString::fromUtf8("btnRight"));
     btnRight->setText(QString(">"));
 
-    btnUp = new QPushButton(this);
+    btnUp = new QToolButton(this);
     btnUp->setObjectName(QString::fromUtf8("btnUp"));
     btnUp->setText(QString("^"));
 
-    btnDown = new QPushButton(this);
+    btnDown = new QToolButton(this);
     btnDown->setObjectName(QString::fromUtf8("btnDown"));
     btnDown->setText(QString("v"));
 
-    btnEsc = new QPushButton(this);
+    btnEsc = new QToolButton(this);
     btnEsc->setObjectName(QString::fromUtf8("btnEsc"));
     btnEsc->setText(QString("Esc"));
 
     QMetaObject::connectSlotsByName(this);
 	QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
-	if (r.width() > 700)
+	if (r.width() > 800)
 		SetGeometryLandscape();
 	else
 		SetGeometryPortrait();
@@ -55,27 +54,18 @@ int CMyMenu::MenuInit(){
 	return 0;
 }
 void CMyMenu::SetGeometryPortrait(){
-	/*this->setGeometry(537, 0, 63, 357);
-    btnCtrlC->setGeometry(QRect(1, 1, 61, 51));
-    btnTab->setGeometry(QRect(1, 52, 61, 51));
-    btnLeft->setGeometry(QRect(1, 103, 61, 51));
-    btnRight->setGeometry(QRect(1, 154, 61, 51));
-    btnUp->setGeometry(QRect(1, 205, 71, 61));
-    btnDown->setGeometry(QRect(1, 256, 61, 51));
-    btnEsc->setGeometry(QRect(1, 307, 61, 50));
-    */
 	QRect r = QApplication::desktop()->screenGeometry(0);
 	this->setGeometry(0, 0, r.width(), 53);
-	btnCtrlC->setGeometry(QRect(2, 1, 95, 51));
-	btnTab->setGeometry(QRect(97, 1, 82, 51));
-	btnLeft->setGeometry(QRect(181, 1, 82, 51));
-	btnRight->setGeometry(QRect(265, 1, 82, 51));
-	btnUp->setGeometry(QRect(349, 1, 82, 51));
-	btnDown->setGeometry(QRect(433, 1, 82, 51));
-	btnEsc->setGeometry(QRect(517, 1, 82, 51));
+	btnCtrlC->setGeometry(QRect(2, 1, 110, 51));
+	btnTab  ->setGeometry(QRect(112, 1, 100, 51));
+	btnLeft ->setGeometry(QRect(112+1*100+1*2, 1, 100, 51));
+	btnRight->setGeometry(QRect(112+2*100+2*2, 1, 100, 51));
+	btnUp   ->setGeometry(QRect(112+3*100+3*2, 1, 100, 51));
+	btnDown ->setGeometry(QRect(112+4*100+4*2, 1, 100, 51));
+	btnEsc  ->setGeometry(QRect(112+5*100+5*2, 1, 100, 51));
 }
 void CMyMenu::SetGeometryLandscape(){
-	this->setGeometry(950, 0, 73, 357);
+	this->setGeometry(1206, 0, 73, 357);
     btnCtrlC->setGeometry(QRect(1, 1, 71, 51));
     btnTab->setGeometry(QRect(1, 52, 71, 51));
     btnLeft->setGeometry(QRect(1, 103, 71, 51));

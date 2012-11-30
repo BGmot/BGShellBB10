@@ -3,8 +3,9 @@
  */
 #ifndef MYMENU_H
 #define MYMENU_H
-#include <QWidget>
-#include <QPushButton>
+#include <QtGui/QWidget>
+//#include <QtGui/QPushButton>
+#include <QtGui/QToolButton>
 
 class CMyMenu : public QWidget
 {
@@ -15,15 +16,16 @@ public:
     int MenuInit();
     void SetGeometryPortrait();
     void SetGeometryLandscape();
+    virtual ~CMyMenu(){};
 	//void focusOutEvent( QFocusEvent * event );
 private:
-    QPushButton *btnCtrlC;
-    QPushButton *btnTab;
-    QPushButton *btnLeft;
-    QPushButton *btnRight;
-    QPushButton *btnUp;
-    QPushButton *btnDown;
-    QPushButton *btnEsc;
+    QToolButton *btnCtrlC;
+    QToolButton *btnTab;
+    QToolButton *btnLeft;
+    QToolButton *btnRight;
+    QToolButton *btnUp;
+    QToolButton *btnDown;
+    QToolButton *btnEsc;
 private slots:
 	void on_btnCtrlC_clicked();
 	void on_btnTab_clicked();

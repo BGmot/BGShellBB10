@@ -116,8 +116,8 @@ void QTermWidget::init()
     m_impl->m_terminalDisplay->setSize(80, 40);
     
     QFont font = QApplication::font(); 
-    font.setFamily("Monospace");
-    font.setPointSize(10);
+    font.setFamily("Courier New");
+    font.setPointSize(6);
     font.setStyleHint(QFont::TypeWriter);
     setTerminalFont(font);
     setScrollBarPosition(NoScrollBar);    
@@ -212,8 +212,6 @@ void QTermWidget::resizeEvent(QResizeEvent*)
 	m_impl->m_terminalDisplay->resize(this->size());
 }
 
-
-
 void QTermWidget::sessionFinished()
 {
 	//+++ We want to hide virtual keyboard before we exit
@@ -221,12 +219,12 @@ void QTermWidget::sessionFinished()
 	QApplication::sendEvent(m_impl->m_terminalDisplay, &event);
     emit finished();
 }
-//#include "moc_consoleq.cpp"
 
 
 bool QTermWidget::event( QEvent *e ){
-	//+++qDebug()<<"QTermWidget::event type="<<e->type();
-	// We want to deliver this signal to private m_impl
+    //+++fprintf(stderr,"QTermWidget::event type=%d\n",e->type());//+++
+
+    // We want to deliver this signal to private m_impl
 	if (e->type() == QEvent::RequestSoftwareInputPanel){
 		QEvent event(QEvent::RequestSoftwareInputPanel);
 		QApplication::sendEvent(m_impl->m_terminalDisplay, &event);
