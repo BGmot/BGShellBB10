@@ -77,7 +77,7 @@ bool myEventFilter(void *message) {
 				nKBHeight = 0;
     		}
 			if (r.width() > 800) console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight); // Landscape
-			else console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53); // Portrait
+			else console->setGeometry(0, 103, r.width(), r.height()-nKBHeight-103); // Portrait
 
 			font = QFont(QString("Courier New"), 6);
 		    font.setStyle(QFont::StyleNormal);
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 	}else{
 		// Portrait - keyboard is higher
 		virtualkeyboard_get_height(&nKBHeight);
-		console->setGeometry(0, 53, r.width()+1, r.height()-nKBHeight-52);
+		console->setGeometry(0, 103, r.width()+1, r.height()-nKBHeight-102);
 	}
 
     console->setScrollBarPosition(QTermWidget::ScrollBarRight);
