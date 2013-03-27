@@ -71,6 +71,7 @@ bool myEventFilter(void *message) {
     			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_VISIBLE\n");
 				bKBhidden = false;
 				nKBHeight = nMaxKBHeight;
+				virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
     		}else if (ec == VIRTUALKEYBOARD_EVENT_HIDDEN){
     			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_HIDDEN\n");
 				bKBhidden = true;
@@ -155,6 +156,7 @@ int main(int argc, char *argv[])
 	console->setTerminalFont(font);
 
     // We start the app with shown keyboard
+	virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
 	if (r.width() > 800){
 		// Landscape
 		virtualkeyboard_get_height(&nKBHeight);
