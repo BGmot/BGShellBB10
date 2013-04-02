@@ -2285,10 +2285,21 @@ void TerminalDisplay::setFlowControlWarningEnabled( bool enable )
 }
 
 extern int masterFdG;
+extern bool bCtrlFlag;
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
 //qDebug("+++%s %d keyPressEvent and key is %d", __FILE__, __LINE__, event->key());
-
+	// Let's treat 'Soft' Ctrl+ case here
+	if (bCtrlFlag){
+		bCtrlFlag = false;
+		char c = 0x0;
+		if (event->key() < 0x60 && event->key() > 0x40){
+			c = event->key() - 0x40;
+			qDebug("%x\n", c);
+			write(masterFdG, &c, 1);
+		}
+		return;
+	}
 	if (event->key() == Qt::Key_Tab){
 		char c = 9;
 		write(masterFdG, &c, 1);

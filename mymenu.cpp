@@ -8,6 +8,7 @@
 
 extern int masterFdG;
 extern QTermWidget *console;
+extern bool bCtrlFlag;
 
 CMyMenu::CMyMenu(QWidget *parent) :
 QWidget(parent)
@@ -18,7 +19,7 @@ QWidget(parent)
 int CMyMenu::MenuInit(){
 	btnCtrlC = new QToolButton(this);
     btnCtrlC->setObjectName(QString::fromUtf8("btnCtrlC"));
-    btnCtrlC->setText(QString("Ctrl+C"));
+    btnCtrlC->setText(QString("Ctrl+"));
 
 	btnTab = new QToolButton(this);
     btnTab->setObjectName(QString::fromUtf8("btnTab"));
@@ -76,8 +77,9 @@ void CMyMenu::SetGeometryLandscape(){
 }
 
 void CMyMenu::on_btnCtrlC_clicked(){
-	char c = 3;
-	write(masterFdG, &c, 1);
+	// Now it is not Ctrl+C, it is CTRL+something, so let's wait for the next key or reset this flag
+	if (bCtrlFlag == false) bCtrlFlag = true;
+	else bCtrlFlag = false;
 	console->setFocus();
 	return;
 }

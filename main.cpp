@@ -40,6 +40,7 @@ CMyMenu *Menu;      // Menu with soft buttons
 QFont font;
 bool bOrientationJustChanged = false; // If we just changed screen orientation then do not handle hide/show keyboard event (skip one ScreenAvailableGeometry event)
 bool bKBhidden = false; // True if VK is not shown
+bool bCtrlFlag = false; // A flag that we use to interpret key - whether it should be treated as Ctrl+ or not
 
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
