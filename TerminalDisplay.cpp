@@ -52,6 +52,9 @@
 #include "TerminalCharacterDecoder.h"
 #include "ColorTables.h"
 
+#include "mymenu.h"
+extern CMyMenu *Menu;
+
 using namespace Konsole;
 
 #ifndef loc
@@ -2292,10 +2295,10 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 	// Let's treat 'Soft' Ctrl+ case here
 	if (bCtrlFlag){
 		bCtrlFlag = false;
+		Menu->btnCtrlC->setDown(false);
 		char c = 0x0;
 		if (event->key() < 0x60 && event->key() > 0x40){
 			c = event->key() - 0x40;
-			qDebug("%x\n", c);
 			write(masterFdG, &c, 1);
 		}
 		return;

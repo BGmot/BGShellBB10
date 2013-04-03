@@ -18,7 +18,7 @@ public:
     void SetGeometryLandscape();
     virtual ~CMyMenu(){};
 	//void focusOutEvent( QFocusEvent * event );
-private:
+
     QToolButton *btnCtrlC;
     QToolButton *btnTab;
     QToolButton *btnLeft;

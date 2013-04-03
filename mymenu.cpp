@@ -78,8 +78,14 @@ void CMyMenu::SetGeometryLandscape(){
 
 void CMyMenu::on_btnCtrlC_clicked(){
 	// Now it is not Ctrl+C, it is CTRL+something, so let's wait for the next key or reset this flag
-	if (bCtrlFlag == false) bCtrlFlag = true;
-	else bCtrlFlag = false;
+	if (bCtrlFlag == false){
+		bCtrlFlag = true;
+		btnCtrlC->setDown(true);
+	}
+	else{
+		bCtrlFlag = false;
+		btnCtrlC->setDown(false);
+	}
 	console->setFocus();
 	return;
 }
