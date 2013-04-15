@@ -46,16 +46,20 @@ int CMyMenu::MenuInit(){
     btnEsc->setText(QString("Esc"));
 
     QMetaObject::connectSlotsByName(this);
-	QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
+#ifndef BBQ10
+    QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
 	if (r.width() > 800)
 		SetGeometryLandscape();
 	else
 		SetGeometryPortrait();
-
+#else
+	SetGeometryPortrait();
+#endif
 	return 0;
 }
 void CMyMenu::SetGeometryPortrait(){
 	QRect r = QApplication::desktop()->screenGeometry(0);
+#ifndef BBQ10
 	this->setGeometry(0, 0, r.width(), 103);
 	btnCtrlC->setGeometry(QRect(2, 1, 110, 101));
 	btnTab  ->setGeometry(QRect(112, 1, 100, 101));
@@ -64,6 +68,18 @@ void CMyMenu::SetGeometryPortrait(){
 	btnUp   ->setGeometry(QRect(112+3*100+3*2, 1, 100, 101));
 	btnDown ->setGeometry(QRect(112+4*100+4*2, 1, 100, 101));
 	btnEsc  ->setGeometry(QRect(112+5*100+5*2, 1, 100, 101));
+#else
+	int nW = r.width();
+	int nH = r.height();
+	this->setGeometry(0, nH-103, nW, 103);
+	btnCtrlC->setGeometry(QRect(2, 1, 110, 101));
+	btnTab  ->setGeometry(QRect(112, 1, 100, 101));
+	btnLeft ->setGeometry(QRect(112+1*100+1*2, 1, 100, 101));
+	btnRight->setGeometry(QRect(112+2*100+2*2, 1, 100, 101));
+	btnUp   ->setGeometry(QRect(112+3*100+3*2, 1, 100, 101));
+	btnDown ->setGeometry(QRect(112+4*100+4*2, 1, 100, 101));
+	btnEsc  ->setGeometry(QRect(112+5*100+5*2, 1, 100, 101));
+#endif
 }
 void CMyMenu::SetGeometryLandscape(){
 	this->setGeometry(1206, 0, 73, 357);

@@ -25,23 +25,31 @@
 #include <fcntl.h>
 #include "qtermwidget.h"
 #include "mymenu.h"
+#ifndef BBQ10
 #include "bps/virtualkeyboard.h"
+#endif
 #include "bps/bps.h"
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
 int pidG_ = -1;     // child's PID
+#ifndef BBQ10
 int nKBHeight = 0;  // current Virtual Keyboard height
-//int nAngle = 0;     // current Angle
 int nMaxKBHeight = 0; // Maximum Keyboard Height in current mode (Landscape/Portrait)
+#endif
 QTermWidget *console; // our 'main' widget, let's make it global so it is available in Menu widget
 QMainWindow *mainWindow;
 CMyMenu *Menu;      // Menu with soft buttons
 QFont font;
+#ifndef BBQ10
 bool bOrientationJustChanged = false; // If we just changed screen orientation then do not handle hide/show keyboard event (skip one ScreenAvailableGeometry event)
 bool bKBhidden = false; // True if VK is not shown
+#endif
 bool bCtrlFlag = false; // A flag that we use to interpret key - whether it should be treated as Ctrl+ or not
-
+#ifdef BBQ10
+bool bAltFlag = false; // A flag that we use to interpert key - whether it should treated as Alt+ or not
+#endif
+#ifndef BBQ10
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
 bool myEventFilter(void *message) {
@@ -90,6 +98,7 @@ bool myEventFilter(void *message) {
  	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
 	return false;
 }
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -156,6 +165,7 @@ int main(int argc, char *argv[])
     font.setWeight(QFont::Normal);
 	console->setTerminalFont(font);
 
+#ifndef BBQ10
     // We start the app with shown keyboard
 	virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
 	if (r.width() > 800){
@@ -167,7 +177,9 @@ int main(int argc, char *argv[])
 		virtualkeyboard_get_height(&nKBHeight);
 		console->setGeometry(0, 103, r.width()+1, r.height()-nKBHeight-102);
 	}
-
+#else
+	console->setGeometry(0, 0, r.width()+1, r.height()-103);
+#endif
     console->setScrollBarPosition(QTermWidget::ScrollBarRight);
 
     // Our 'soft buttons' menu
@@ -177,7 +189,7 @@ int main(int argc, char *argv[])
     QObject::connect(console, SIGNAL(finished()), mainWindow, SLOT(close()));
 
     mainWindow->show();    
-
+#ifndef BBQ10
     // Install event filter
     mainEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(myEventFilter);
 
@@ -187,6 +199,6 @@ int main(int argc, char *argv[])
     virtualkeyboard_get_height(&nMaxKBHeight); // Init maximum VK height
 
     virtualkeyboard_request_events(0); // To catch show/hide VK events
-
+#endif
     return app.exec();
 }

@@ -2289,9 +2289,58 @@ void TerminalDisplay::setFlowControlWarningEnabled( bool enable )
 
 extern int masterFdG;
 extern bool bCtrlFlag;
+#ifdef BBQ10
+extern bool bAltFlag;
+#endif
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
 //qDebug("+++%s %d keyPressEvent and key is %d", __FILE__, __LINE__, event->key());
+#ifdef BBQ10
+	if (event->key() == Qt::Key_Alt){
+		if (bAltFlag)
+			bAltFlag = false;
+		else
+			bAltFlag = true;
+		return; // wait for the next button
+	}
+	if (bAltFlag){
+		bAltFlag = false;
+		// Alt was pressed we need to treat it differently -(
+		char c = 0;
+		switch(event->key()){
+		case Qt::Key_Q : c = 35; break;
+		case Qt::Key_W : c = 49; break;
+		case Qt::Key_E : c = 50; break;
+		case Qt::Key_R : c = 51; break;
+		case Qt::Key_T : c = 40; break;
+		case Qt::Key_Y : c = 41; break;
+		case Qt::Key_U : c = 95; break;
+		case Qt::Key_I : c = 45; break;
+		case Qt::Key_O : c = 43; break;
+		case Qt::Key_P : c = 64; break;
+		case Qt::Key_A : c = 42; break;
+		case Qt::Key_S : c = 52; break;
+		case Qt::Key_D : c = 53; break;
+		case Qt::Key_F : c = 54; break;
+		case Qt::Key_G : c = 47; break;
+		case Qt::Key_H : c = 58; break;
+		case Qt::Key_J : c = 59; break;
+		case Qt::Key_K : c = 39; break;
+		case Qt::Key_L : c = 34; break;
+		case Qt::Key_Z : c = 55; break;
+		case Qt::Key_X : c = 56; break;
+		case Qt::Key_C : c = 57; break;
+		case Qt::Key_V : c = 63; break;
+		case Qt::Key_B : c = 33; break;
+		case Qt::Key_N : c = 44; break;
+		case Qt::Key_M : c = 46; break;
+		case Qt::Key_Dollar : c = 96; break;
+		}
+		if (c != 0)
+			write(masterFdG, &c, 1);
+		return;
+	}
+#endif
 	// Let's treat 'Soft' Ctrl+ case here
 	if (bCtrlFlag){
 		bCtrlFlag = false;

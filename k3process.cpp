@@ -583,7 +583,7 @@ bool K3Process::writeStdin(const char *buffer, int buflen)
     return false;
 
   if (communication & Stdin) {
-    //+++for(int i=0; i < buflen; i++) qDebug()<<int(buffer[i])<<"+++";
+	  //+++for(int i=0; i < buflen; i++) qDebug()<<"K3Process::writeStdin():"<<int(buffer[i])<<"+++";
     input_data = buffer;
     input_sent = 0;
     input_total = buflen;
