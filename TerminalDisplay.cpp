@@ -2294,16 +2294,16 @@ extern bool bAltFlag;
 #endif
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
-//qDebug("+++%s %d keyPressEvent and key is %d", __FILE__, __LINE__, event->key());
+//qDebug("+++%s %d keyPressEvent and key is %d, modifiers=%x", __FILE__, __LINE__, event->key(), int(event->modifiers()));
 #ifdef BBQ10
 	if (event->key() == Qt::Key_Alt){
-		if (bAltFlag)
-			bAltFlag = false;
-		else
+//		if (bAltFlag)
+//			bAltFlag = false;
+//		else
 			bAltFlag = true;
 		return; // wait for the next button
 	}
-	if (bAltFlag){
+	if (bAltFlag || int(event->modifiers()) == Qt::AltModifier){
 		bAltFlag = false;
 		// Alt was pressed we need to treat it differently -(
 		char c = 0;
@@ -2335,6 +2335,7 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 		case Qt::Key_N : c = 44; break;
 		case Qt::Key_M : c = 46; break;
 		case Qt::Key_Dollar : c = 96; break;
+		case 0x30 : c = '0'; break;
 		}
 		if (c != 0)
 			write(masterFdG, &c, 1);
