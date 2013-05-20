@@ -40,7 +40,7 @@ int nKBHeight = 0;  // current Virtual Keyboard height
 int nMaxKBHeight = 0; // Maximum Keyboard Height in current mode (Landscape/Portrait)
 #endif
 QTermWidget *console; // our 'main' widget, let's make it global so it is available in Menu widget
-QMyMainWindow *mainWindow;
+CMyMainWindow *mainWindow;
 CMyMenu *Menu;      // Menu with soft buttons
 CMySystemMenu *SystemMenu; // System menu from 'swipe down' event
 QFont font;
