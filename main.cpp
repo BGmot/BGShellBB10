@@ -25,6 +25,8 @@
 #include <fcntl.h>
 #include "qtermwidget.h"
 #include "mymenu.h"
+#include "mysystemmenu.h"
+#include "mymainwindow.h"
 #ifndef BBQ10
 #include "bps/virtualkeyboard.h"
 #endif
@@ -38,8 +40,9 @@ int nKBHeight = 0;  // current Virtual Keyboard height
 int nMaxKBHeight = 0; // Maximum Keyboard Height in current mode (Landscape/Portrait)
 #endif
 QTermWidget *console; // our 'main' widget, let's make it global so it is available in Menu widget
-QMainWindow *mainWindow;
+QMyMainWindow *mainWindow;
 CMyMenu *Menu;      // Menu with soft buttons
+CMySystemMenu *SystemMenu; // System menu from 'swipe down' event
 QFont font;
 #ifndef BBQ10
 bool bOrientationJustChanged = false; // If we just changed screen orientation then do not handle hide/show keyboard event (skip one ScreenAvailableGeometry event)
@@ -154,7 +157,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    mainWindow = new QMainWindow();
+    mainWindow = new CMyMainWindow();
     QRect r = QApplication::desktop()->screenGeometry(0);
     mainWindow->resize(r.width()+1, r.height()+1);
 
@@ -185,6 +188,10 @@ int main(int argc, char *argv[])
     // Our 'soft buttons' menu
     Menu = new CMyMenu(mainWindow);
     Menu->MenuInit();
+
+    // Our system menu
+    SystemMenu = new CMySystemMenu(mainWindow);
+    SystemMenu->MenuInit();
 
     QObject::connect(console, SIGNAL(finished()), mainWindow, SLOT(close()));
 
