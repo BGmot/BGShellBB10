@@ -30,9 +30,10 @@ int CMySystemMenu::MenuInit(){
 }
 void CMySystemMenu::SetGeometry(){
 	QRect r = QApplication::desktop()->screenGeometry(0);
-	this->setGeometry(0, 0, r.width(), 103);
-	btnSettings->setGeometry(QRect(2, 1, 310, 101));
-	btnDonate  ->setGeometry(QRect(312, 1, 310, 101));
+	int nScreenWidth = r.width();
+	this->setGeometry(0, 0, nScreenWidth, 103);
+	btnSettings->setGeometry(QRect(2, 1, nScreenWidth/2-2, 101));
+	btnDonate  ->setGeometry(QRect(nScreenWidth/2+2, 1, nScreenWidth/2-4, 101));
 }
 
 void CMySystemMenu::on_btnSettings_clicked(){
