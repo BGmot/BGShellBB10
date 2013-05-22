@@ -3,13 +3,15 @@
  */
 
 #include "mysystemmenu.h"
+#include "mysettingswindow.h"
 #include "qtermwidget.h"
 
 CMySystemMenu::CMySystemMenu(QWidget *parent) :
 QWidget(parent)
 {
+	wdgSettingsWindow = NULL;
 	setVisible(false);
-	setWindowModality(Qt::ApplicationModal);
+	//setWindowModality(Qt::ApplicationModal);
 }
 
 // There is nothing to comment here, all button names tell you what they do
@@ -37,6 +39,11 @@ void CMySystemMenu::SetGeometry(){
 }
 
 void CMySystemMenu::on_btnSettings_clicked(){
+	if (!wdgSettingsWindow){
+		wdgSettingsWindow = new CMySettingsWindow((QWidget*)this->parent());
+		wdgSettingsWindow->Init();
+		wdgSettingsWindow->show();
+	}
 	return;
 }
 void CMySystemMenu::on_btnDonate_clicked(){

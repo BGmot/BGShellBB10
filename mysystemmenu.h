@@ -5,6 +5,7 @@
 #define MYSYSTEMMENU_H
 #include <QtGui/QWidget>
 #include <QtGui/QToolButton>
+#include "mysettingswindow.h"
 
 class CMySystemMenu : public QWidget
 {
@@ -18,6 +19,8 @@ public:
 
     QToolButton *btnSettings;
     QToolButton *btnDonate;
+    CMySettingsWindow *wdgSettingsWindow;
+
 private slots:
 	void on_btnSettings_clicked();
 	void on_btnDonate_clicked();
