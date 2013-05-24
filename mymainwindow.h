@@ -12,6 +12,8 @@ class CMyMainWindow : public QMainWindow
 public:
     CMyMainWindow();
     virtual bool event(QEvent *e);
+
+    void ReadAndApplyProxySettings();
 };
 
 #endif

@@ -40,6 +40,12 @@ int CMySettingsWindow::Init(){
     layout->addWidget(lblProxy);
 
     cbxProxyOn = new QCheckBox(tr(" Use HTTP Proxy"));
+	QSettings settings;
+	int nProxyOn = settings.value("HttpProxyOn").toInt();
+	if (nProxyOn)
+		cbxProxyOn->setChecked(true);
+	else
+		cbxProxyOn->setChecked(false);
     layout->addWidget(cbxProxyOn);
 
     QLabel *lblHint = new QLabel(tr("\nHint: Swipe again to hide this dialog"));
