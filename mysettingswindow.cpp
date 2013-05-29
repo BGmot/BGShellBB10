@@ -48,7 +48,7 @@ int CMySettingsWindow::Init(){
 		cbxProxyOn->setChecked(false);
     layout->addWidget(cbxProxyOn);
 
-    QLabel *lblHint = new QLabel(tr("\nHint: Swipe again to hide this dialog"));
+    QLabel *lblHint = new QLabel(tr("\nHint: Swipe down again to hide this dialog"));
     layout->addWidget(lblHint);
 
     gb->setLayout(layout);

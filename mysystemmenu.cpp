@@ -1,15 +1,16 @@
 /*
  * Copyright (C) 2013 BGmot <support@tm-k.com>
  */
-
-#include "mysystemmenu.h"
-#include "mysettingswindow.h"
 #include "qtermwidget.h"
+#include "mysystemmenu.h"
+#include "mydonatewindow.h"
+#include "mysettingswindow.h"
 
 CMySystemMenu::CMySystemMenu(QWidget *parent) :
 QWidget(parent)
 {
 	wdgSettingsWindow = NULL;
+	wdgDonateWindow = NULL;
 	setVisible(false);
 	//setWindowModality(Qt::ApplicationModal);
 }
@@ -22,7 +23,7 @@ int CMySystemMenu::MenuInit(){
 
 	btnDonate = new QToolButton(this);
 	btnDonate->setObjectName(QString::fromUtf8("btnDonate"));
-	btnDonate->setText(QString("Donate"));
+	btnDonate->setText(QString("Say Thanks"));
 
     QMetaObject::connectSlotsByName(this);
 
@@ -47,5 +48,10 @@ void CMySystemMenu::on_btnSettings_clicked(){
 	return;
 }
 void CMySystemMenu::on_btnDonate_clicked(){
+	if (!wdgDonateWindow){
+		wdgDonateWindow = new CMyDonateWindow((QWidget*)this->parent());
+		wdgDonateWindow->Init();
+	}
+	wdgDonateWindow->show();
 	return;
 }

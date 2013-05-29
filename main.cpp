@@ -31,6 +31,7 @@
 #include "bps/virtualkeyboard.h"
 #endif
 #include "bps/bps.h"
+#include "bps/paymentservice.h"
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
@@ -96,6 +97,27 @@ bool myEventFilter(void *message) {
 		    font.setStyle(QFont::StyleNormal);
 		    font.setWeight(QFont::Normal);
 			console->setTerminalFont(font);
+    	}else if (domain == paymentservice_get_domain()){
+            if (SUCCESS_RESPONSE == paymentservice_event_get_response_code(event)) {
+                if (PURCHASE_RESPONSE == bps_event_get_code(event)) {
+                    unsigned request_id = paymentservice_event_get_request_id(event);
+                    const char* date = paymentservice_event_get_date(event, 0);
+                    const char* digital_good = paymentservice_event_get_digital_good_id(event, 0);
+                    const char* digital_sku = paymentservice_event_get_digital_good_sku(event, 0);
+                    const char* license_key = paymentservice_event_get_license_key(event, 0);
+                    const char* metadata = paymentservice_event_get_metadata(event, 0);
+                    const char* purchase_id = paymentservice_event_get_purchase_id(event, 0);
+
+                    fprintf(stderr, "Purchase success. Request Id: %d\n Date: %s\n DigitalGoodID: %s\n SKU: %s\n License: %s\n Metadata: %s\n PurchaseId: %s\n\n",
+                        request_id,
+                        date ? date : "N/A",
+                        digital_good ? digital_good : "N/A",
+                        digital_sku ? digital_sku : "N/A",
+                        license_key ? license_key : "N/A",
+                        metadata ? metadata : "N/A",
+                        purchase_id ? purchase_id : "N/A");
+                }
+            }
     	}
    	}
  	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
@@ -207,5 +229,8 @@ int main(int argc, char *argv[])
 
     virtualkeyboard_request_events(0); // To catch show/hide VK events
 #endif
+    paymentservice_request_events(0);
+    paymentservice_set_connection_mode(false);
+
     return app.exec();
 }

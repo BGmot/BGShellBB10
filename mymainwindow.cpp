@@ -25,7 +25,12 @@ CMyMainWindow::CMyMainWindow() :
 bool CMyMainWindow::event(QEvent *e){
 //	qDebug()<<"CMyMainWindow::event() type="<<e->type();
 	if (e->type() ==  QEvent::PlatformPanel){
-		// Up-down swipe detected
+		// Swipe-down detected
+		if (SystemMenu->wdgDonateWindow)
+			if (SystemMenu->wdgDonateWindow->isVisible())
+				return QMainWindow::event(e);
+
+		// We react to up-swipe event only if Donate window is not visible
 		if (SystemMenu->wdgSettingsWindow){
 			// Swipe when Settings window is active
 			// Save Proxy Settings
@@ -46,7 +51,6 @@ bool CMyMainWindow::event(QEvent *e){
 			SystemMenu->show();
 		}
 	}
-
 	return QMainWindow::event(e);
 }
 
@@ -198,6 +202,7 @@ void CMyMainWindow::ReadAndApplyProxySettings(){
 		}else{
 			// file does not exist, so nothing to do
 			return;
+
 		}
 	}
 }
