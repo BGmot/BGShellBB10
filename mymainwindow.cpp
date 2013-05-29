@@ -70,7 +70,7 @@ void CMyMainWindow::ReadAndApplyProxySettings(){
 
 	QSettings settings;
 	int nProxyOn = settings.value("HttpProxyOn").toInt();
-	if (nProxyOn &&!host.isEmpty()){
+	if (nProxyOn && !host.isEmpty()){
 		// Proxy should be turned on
 
 	    QString proxycommand;
@@ -159,7 +159,6 @@ void CMyMainWindow::ReadAndApplyProxySettings(){
 				return;
 			}
 			fileSshConfig.write("Host *\n");
-			QString proxycommand = "\tProxyCommand corkscrew " + host + " " + port + " %h %p\n";
 			fileSshConfig.write(proxycommand.toAscii());
 			fileSshConfig.close();
 			fileSshConfig.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
