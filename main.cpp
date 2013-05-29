@@ -108,14 +108,13 @@ bool myEventFilter(void *message) {
                     const char* metadata = paymentservice_event_get_metadata(event, 0);
                     const char* purchase_id = paymentservice_event_get_purchase_id(event, 0);
 
-                    fprintf(stderr, "Purchase success. Request Id: %d\n Date: %s\n DigitalGoodID: %s\n SKU: %s\n License: %s\n Metadata: %s\n PurchaseId: %s\n\n",
-                        request_id,
-                        date ? date : "N/A",
-                        digital_good ? digital_good : "N/A",
-                        digital_sku ? digital_sku : "N/A",
-                        license_key ? license_key : "N/A",
-                        metadata ? metadata : "N/A",
-                        purchase_id ? purchase_id : "N/A");
+                    qDebug() << QString("Purchase success. Request Id: ") + QString::number(request_id) +
+                    		QString("\n Date: ") + (date ? QString(date) : QString("N/A")) +
+                    		QString("\n DigitalGoodID: ") + (digital_good ? QString(digital_good) : QString("N/A")) +
+                    		QString("\n SKU: ") + (digital_sku ? QString(digital_sku) : QString("N/A")) +
+                    		QString("\n License: ") + (license_key ? QString(license_key) : QString("N/A")) +
+                    		QString("\n Metadata: ") + (metadata ? QString(metadata) : QString("N/A")) +
+                    		QString("\n PurchaseId: ") + (purchase_id ? QString(purchase_id) : QString("N/A"));
                 }
             }
     	}
