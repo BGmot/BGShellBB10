@@ -29,9 +29,8 @@
 #include "mymainwindow.h"
 #ifndef BBQ10
 #include "bps/virtualkeyboard.h"
-#endif
 #include "bps/bps.h"
-#include "bps/paymentservice.h"
+#endif
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
@@ -54,6 +53,7 @@ bool bCtrlFlag = false; // A flag that we use to interpret key - whether it shou
 bool bAltFlag = false; // A flag that we use to interpert key - whether it should treated as Alt+ or not
 #endif
 
+#ifndef BBQ10
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
 bool myEventFilter(void *message) {
@@ -61,7 +61,6 @@ bool myEventFilter(void *message) {
     bps_event_t *event = (bps_event_t*)message;
     if (event) {
     	int domain = bps_event_get_domain(event);
-#ifndef BBQ10
     	if (domain == virtualkeyboard_get_domain()) {
     		unsigned int ec = bps_event_get_code(event);
     		 if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
@@ -96,32 +95,11 @@ bool myEventFilter(void *message) {
 		    font.setWeight(QFont::Normal);
 			console->setTerminalFont(font);
     	}
-#endif
-    	if (domain == paymentservice_get_domain()){
-            if (SUCCESS_RESPONSE == paymentservice_event_get_response_code(event)) {
-                if (PURCHASE_RESPONSE == bps_event_get_code(event)) {
-                    unsigned request_id = paymentservice_event_get_request_id(event);
-                    const char* date = paymentservice_event_get_date(event, 0);
-                    const char* digital_good = paymentservice_event_get_digital_good_id(event, 0);
-                    const char* digital_sku = paymentservice_event_get_digital_good_sku(event, 0);
-                    const char* license_key = paymentservice_event_get_license_key(event, 0);
-                    const char* metadata = paymentservice_event_get_metadata(event, 0);
-                    const char* purchase_id = paymentservice_event_get_purchase_id(event, 0);
-
-                    qDebug() << QString("Purchase success. Request Id: ") + QString::number(request_id) +
-                    		QString("\n Date: ") + (date ? QString(date) : QString("N/A")) +
-                    		QString("\n DigitalGoodID: ") + (digital_good ? QString(digital_good) : QString("N/A")) +
-                    		QString("\n SKU: ") + (digital_sku ? QString(digital_sku) : QString("N/A")) +
-                    		QString("\n License: ") + (license_key ? QString(license_key) : QString("N/A")) +
-                    		QString("\n Metadata: ") + (metadata ? QString(metadata) : QString("N/A")) +
-                    		QString("\n PurchaseId: ") + (purchase_id ? QString(purchase_id) : QString("N/A"));
-                }
-            }
-    	}
    	}
  	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
 	return false;
 }
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -217,10 +195,10 @@ int main(int argc, char *argv[])
 
     mainWindow->show();    
 
+#ifndef BBQ10
     // Install event filter
     mainEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(myEventFilter);
 
-#ifndef BBQ10
     // Show virtual keyboard
     QEvent event(QEvent::RequestSoftwareInputPanel);
     QApplication::sendEvent(console, &event);
@@ -228,8 +206,6 @@ int main(int argc, char *argv[])
 
     virtualkeyboard_request_events(0); // To catch show/hide VK events
 #endif
-    paymentservice_request_events(0);
-    paymentservice_set_connection_mode(true);
 
     return app.exec();
 }

@@ -5,7 +5,11 @@
 #include <QtCore/QEvent>
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
+#include <QtGui/QMessageBox>
 #include <bps/netstatus.h>
+#include <qplatformnativeinterface_qpa.h>
+#include <qapplication.h>
+#include <bb/platform/PurchaseReply>
 
 #include "mymainwindow.h"
 #include "mysystemmenu.h"
@@ -20,6 +24,11 @@ CMyMainWindow::CMyMainWindow() :
 	QMainWindow()
 {
 	ReadAndApplyProxySettings();
+	bb::platform::PaymentManager::setConnectionMode(bb::platform::PaymentConnectionMode::Test);
+	paymentManager = new bb::platform::PaymentManager(this);
+    QPlatformNativeInterface * const nativeInterface = QApplication::platformNativeInterface();
+    const QString windowGroupId = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
+    paymentManager->setWindowGroupId(windowGroupId);
 }
 
 bool CMyMainWindow::event(QEvent *e){
@@ -204,4 +213,39 @@ void CMyMainWindow::ReadAndApplyProxySettings(){
 
 		}
 	}
+}
+
+void CMyMainWindow::purchaseResponse(){
+    bb::platform::PurchaseReply *reply = qobject_cast<bb::platform::PurchaseReply*>(sender());
+    Q_ASSERT(reply);
+    if (reply->isError()){
+    	qDebug() << "CMyMainWindow::purchaseResponse(): Purchase response error. Code(" << reply->errorCode() << ") Text(" << reply->errorText() << ")";
+    	QMessageBox msgBox;
+    	msgBox.setText(QString("An error occured:\nCode(") + QString::number(reply->errorCode()) + QString(") Text(") + reply->errorText() + QString(")"));
+    	msgBox.setStandardButtons(QMessageBox::Close);
+    	msgBox.exec();
+    }else{
+    	bb::platform::PurchaseReceipt r = reply->receipt();
+        const QString initialPeriod = QString::number(r.initialPeriod());
+        const QDateTime startDate = r.startDate();
+        const QString startDateStr = startDate.isNull() ? "N/A" : startDate.toString();
+        const QDateTime endDate = r.endDate();
+        const QString endDateStr = endDate.isNull() ? "N/A" : endDate.toString();
+        const QString isSubscr = r.isSubscription() ? "true" : "false";
+        const QString itemStateStr = QString::number(static_cast<int>(r.state()));
+
+        const QString displayString = "Date: " + r.date().toString() +
+            "\nID/SKU: " + r.digitalGoodId() + "/" + r.digitalGoodSku() +
+            "\nPurchaseID/licenseKey: " + r.purchaseId() + "/" + r.licenseKey() +
+            "\nMetadata: " + r.purchaseMetadata() +
+            "\nItemState/isSubscription?: " + itemStateStr + "/" + isSubscr +
+            "\nStart/End: " + startDateStr + "/" + endDateStr +
+            "\nInitialPeriod: " + initialPeriod + "\n";
+    	qDebug() << "Purchase response success. " << displayString;
+
+    	 QMessageBox msgBox;
+    	 msgBox.setText("Thank you!");
+    	 msgBox.setStandardButtons(QMessageBox::Close);
+    	 msgBox.exec();
+    }
 }
