@@ -53,7 +53,7 @@ bool bCtrlFlag = false; // A flag that we use to interpret key - whether it shou
 #ifdef BBQ10
 bool bAltFlag = false; // A flag that we use to interpert key - whether it should treated as Alt+ or not
 #endif
-#ifndef BBQ10
+
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
 bool myEventFilter(void *message) {
@@ -61,10 +61,10 @@ bool myEventFilter(void *message) {
     bps_event_t *event = (bps_event_t*)message;
     if (event) {
     	int domain = bps_event_get_domain(event);
+#ifndef BBQ10
     	if (domain == virtualkeyboard_get_domain()) {
     		unsigned int ec = bps_event_get_code(event);
     		 if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
-    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_INFO\n");
     			int nNewKBHeight = virtualkeyboard_event_get_height(event);
     			virtualkeyboard_get_height(&nNewKBHeight);
     			if ( nNewKBHeight != nKBHeight){
@@ -81,12 +81,10 @@ bool myEventFilter(void *message) {
     		}
     		QRect r = QApplication::desktop()->screenGeometry(0);
     		if (ec == VIRTUALKEYBOARD_EVENT_VISIBLE){
-    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_VISIBLE\n");
 				bKBhidden = false;
 				nKBHeight = nMaxKBHeight;
 				virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
     		}else if (ec == VIRTUALKEYBOARD_EVENT_HIDDEN){
-    			//fprintf(stderr, "main: VIRTUALKEYBOARD_EVENT_HIDDEN\n");
 				bKBhidden = true;
 				nKBHeight = 0;
     		}
@@ -97,7 +95,9 @@ bool myEventFilter(void *message) {
 		    font.setStyle(QFont::StyleNormal);
 		    font.setWeight(QFont::Normal);
 			console->setTerminalFont(font);
-    	}else if (domain == paymentservice_get_domain()){
+    	}
+#endif
+    	if (domain == paymentservice_get_domain()){
             if (SUCCESS_RESPONSE == paymentservice_event_get_response_code(event)) {
                 if (PURCHASE_RESPONSE == bps_event_get_code(event)) {
                     unsigned request_id = paymentservice_event_get_request_id(event);
@@ -122,7 +122,6 @@ bool myEventFilter(void *message) {
  	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
 	return false;
 }
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -217,10 +216,11 @@ int main(int argc, char *argv[])
     QObject::connect(console, SIGNAL(finished()), mainWindow, SLOT(close()));
 
     mainWindow->show();    
-#ifndef BBQ10
+
     // Install event filter
     mainEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(myEventFilter);
 
+#ifndef BBQ10
     // Show virtual keyboard
     QEvent event(QEvent::RequestSoftwareInputPanel);
     QApplication::sendEvent(console, &event);
@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
     virtualkeyboard_request_events(0); // To catch show/hide VK events
 #endif
     paymentservice_request_events(0);
-    paymentservice_set_connection_mode(false);
+    paymentservice_set_connection_mode(true);
 
     return app.exec();
 }

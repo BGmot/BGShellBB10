@@ -8,13 +8,9 @@
 #include <bps/paymentservice.h>
 #include "qtermwidget.h"
 #include "mydonatewindow.h"
-//#include "mymainwindow.h"
 #include "mysystemmenu.h"
-#include "qtermwidget.h"
 
-//extern CMyMainWindow *mainWindow;
 extern CMySystemMenu *SystemMenu;
-extern QTermWidget *console;
 
 CMyDonateWindow::CMyDonateWindow(QWidget *parent) :
 	QWidget(parent)
@@ -103,9 +99,7 @@ void CMyDonateWindow::on_btnOk_clicked(){
 
 	// Find Window Group ID
 	QPlatformNativeInterface * const nativeInterface = QApplication::platformNativeInterface();
-	//const char * const groupName = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
-	//const char * const groupName = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", mainWindow));
-	const char * const groupName = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", console));
+	const char * const groupName = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
 
     const char* purchase_app_name = "BG SSH-SCP-SFTP";
     unsigned request_id = 0; // Define a request ID to hold the returned value from the purchase request
