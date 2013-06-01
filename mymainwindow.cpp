@@ -24,7 +24,7 @@ CMyMainWindow::CMyMainWindow() :
 	QMainWindow()
 {
 	ReadAndApplyProxySettings();
-	bb::platform::PaymentManager::setConnectionMode(bb::platform::PaymentConnectionMode::Test);
+	bb::platform::PaymentManager::setConnectionMode(bb::platform::PaymentConnectionMode::Production);
 	paymentManager = new bb::platform::PaymentManager(this);
     QPlatformNativeInterface * const nativeInterface = QApplication::platformNativeInterface();
     const QString windowGroupId = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
