@@ -26,7 +26,7 @@ int CMySystemMenu::MenuInit(){
 	btnDonate->setText(QString("Say Thanks"));
 
 	// For now disable donations
-	btnDonate->setVisible(false);
+	//btnDonate->setVisible(false);
 
     QMetaObject::connectSlotsByName(this);
 
@@ -38,7 +38,6 @@ void CMySystemMenu::SetGeometry(){
 	QRect r = QApplication::desktop()->screenGeometry(0);
 	int nScreenWidth = r.width();
 	this->setGeometry(0, 0, nScreenWidth, 103);
-	//this->setMinimumWidth(nScreenWidth);
     QBrush brush1(QColor(76, 76, 76, 255));
     brush1.setStyle(Qt::SolidPattern);
     QPalette palette;

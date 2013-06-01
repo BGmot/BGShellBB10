@@ -16,6 +16,7 @@
 #include "mysettingswindow.h"
 
 extern CMySystemMenu *SystemMenu;
+extern CMyMainWindow *mainWindow;
 #define SSH_CONFIG_FNAME "data/.ssh/config"
 #define SSH_CONFIG_FNAME_TMP "data/.ssh/config.tmp"
 #define SSH_PROXY_AUTH_FNAME "data/.ssh/myauth"
@@ -27,7 +28,8 @@ CMyMainWindow::CMyMainWindow() :
 	bb::platform::PaymentManager::setConnectionMode(bb::platform::PaymentConnectionMode::Production);
 	paymentManager = new bb::platform::PaymentManager(this);
     QPlatformNativeInterface * const nativeInterface = QApplication::platformNativeInterface();
-    const QString windowGroupId = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
+    //const QString windowGroupId = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", QApplication::topLevelWidgets().first()));
+    const QString windowGroupId = static_cast<const char *>(nativeInterface->nativeResourceForWidget("windowGroup", mainWindow));
     paymentManager->setWindowGroupId(windowGroupId);
 }
 
