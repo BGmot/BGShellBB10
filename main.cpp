@@ -90,7 +90,8 @@ bool myEventFilter(void *message) {
 			if (r.width() > 800) console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight); // Landscape
 			else console->setGeometry(0, 103, r.width(), r.height()-nKBHeight-103); // Portrait
 
-			font = QFont(QString("Courier New"), 6);
+			//font = QFont(QString("Courier New"), 6);
+			font.setPixelSize(mainWindow->nFontSize);
 		    font.setStyle(QFont::StyleNormal);
 		    font.setWeight(QFont::Normal);
 			console->setTerminalFont(font);

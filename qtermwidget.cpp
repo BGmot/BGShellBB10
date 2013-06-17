@@ -24,6 +24,9 @@
 #include "Session.h"
 #include "TerminalDisplay.h"
 
+#include "mymainwindow.h"
+extern CMyMainWindow *mainWindow;
+
 using namespace Konsole;
 
 void *createTermWidget(int startnow, void *parent)
@@ -117,7 +120,8 @@ void QTermWidget::init()
     
     QFont font = QApplication::font(); 
     font.setFamily("Courier New");
-    font.setPointSize(6);
+    //font.setPointSize(6);
+    font.setPixelSize(mainWindow->nFontSize);
     font.setStyleHint(QFont::TypeWriter);
     setTerminalFont(font);
     setScrollBarPosition(NoScrollBar);    

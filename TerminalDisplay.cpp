@@ -53,7 +53,9 @@
 #include "ColorTables.h"
 
 #include "mymenu.h"
+#include "mymainwindow.h"
 extern CMyMenu *Menu;
+extern CMyMainWindow *mainWindow;
 
 using namespace Konsole;
 
@@ -169,7 +171,8 @@ unsigned short Konsole::vt100_graphics[32] =
 void TerminalDisplay::fontChange(const QFont&)
 {
   QFontMetrics fm(font());
-  _fontHeight = fm.height() + _lineSpacing;
+//  _fontHeight = fm.height() + _lineSpacing;
+  _fontHeight = mainWindow->nFontSize + _lineSpacing;
 
 
   // waba TerminalDisplay 1.123:

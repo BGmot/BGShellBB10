@@ -6,6 +6,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
 #include <QtGui/QMessageBox>
+#include <qtCore/Qdir>
 #include <bps/netstatus.h>
 #include <qplatformnativeinterface_qpa.h>
 #include <qapplication.h>
@@ -24,6 +25,12 @@ extern CMyMainWindow *mainWindow;
 CMyMainWindow::CMyMainWindow() :
 	QMainWindow()
 {
+	QSettings settings;
+	int nConfigFontSize = settings.value("FontSize").toInt();
+	if (nConfigFontSize != 0)
+		nFontSize = nConfigFontSize;
+	else
+		nFontSize = 22;
 	ReadAndApplyProxySettings();
 	bb::platform::PaymentManager::setConnectionMode(bb::platform::PaymentConnectionMode::Production);
 	paymentManager = new bb::platform::PaymentManager(this);
@@ -78,6 +85,12 @@ void CMyMainWindow::ReadAndApplyProxySettings(){
     QString user = details.http_proxy_login_user;
     QString password = details.http_proxy_login_password;
     netstatus_free_proxy_details(&details);
+
+    QDir SshDir(QString("data"));
+    QDir SshDir1(QString("data/.ssh"));
+    if (!SshDir1.exists())
+    	if (!SshDir.mkdir(".ssh"))
+    		qDebug() << "CMyMainWindow::ReadAndApplyProxySettings(): Can't create data/.ssh";
 
 	QSettings settings;
 	int nProxyOn = settings.value("HttpProxyOn").toInt();

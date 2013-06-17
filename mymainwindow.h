@@ -12,6 +12,7 @@ class CMyMainWindow : public QMainWindow
 
 public:
 	bb::platform::PaymentManager *paymentManager;
+	int nFontSize;
 
     CMyMainWindow();
     virtual bool event(QEvent *e);
