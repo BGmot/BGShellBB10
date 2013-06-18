@@ -118,7 +118,7 @@ void CMySettingsWindow::on_FontSizeChanged(QAbstractButton *button){
 	QSettings settings;
 	settings.setValue("FontSize", nSize);
 
-	QFont newfont;
+	QFont newfont = QFont(QString("Courier New"), 6);
 	newfont.setPixelSize(nSize);
     newfont.setStyle(QFont::StyleNormal);
     newfont.setWeight(QFont::Normal);

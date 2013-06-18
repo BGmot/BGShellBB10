@@ -171,9 +171,8 @@ unsigned short Konsole::vt100_graphics[32] =
 void TerminalDisplay::fontChange(const QFont&)
 {
   QFontMetrics fm(font());
-//  _fontHeight = fm.height() + _lineSpacing;
-  _fontHeight = mainWindow->nFontSize + _lineSpacing;
-
+  //_fontHeight = fm.height() + _lineSpacing;
+  _fontHeight = mainWindow->nFontSize + _lineSpacing + 2;
 
   // waba TerminalDisplay 1.123:
   // "Base character width on widest ASCII character. This prevents too wide
@@ -208,7 +207,8 @@ void TerminalDisplay::setVTFont(const QFont& f)
 
   QFontMetrics metrics(font);
 
-  if ( metrics.height() < height() && metrics.maxWidth() < width() )
+  //if ( metrics.height() < height() && metrics.maxWidth() < width() )
+  if ( metrics.height()-1 < height() && metrics.maxWidth() < width() )
   {
     // hint that text should be drawn without anti-aliasing.  
     // depending on the user's font configuration, this may not be respected

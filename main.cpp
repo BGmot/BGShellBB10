@@ -163,6 +163,7 @@ int main(int argc, char *argv[])
     console = new QTermWidget(1, mainWindow);
 
     font = QFont(QString("Courier New"), 6);
+    font.setPixelSize(mainWindow->nFontSize);
     font.setStyle(QFont::StyleNormal);
     font.setWeight(QFont::Normal);
 	console->setTerminalFont(font);
