@@ -54,6 +54,13 @@
 
 #include "mymenu.h"
 #include "mymainwindow.h"
+#ifdef BBQ10
+#include "myvk.h"
+extern bool bSymFlag;
+extern CMyVirtualKeyboard *virtualKeyboard;
+#endif
+extern int masterFdG;
+extern bool bCtrlFlag;
 extern CMyMenu *Menu;
 extern CMyMainWindow *mainWindow;
 
@@ -2290,24 +2297,68 @@ void TerminalDisplay::setFlowControlWarningEnabled( bool enable )
 		outputSuspended(false);
 }
 
-extern int masterFdG;
-extern bool bCtrlFlag;
-#ifdef BBQ10
-extern bool bAltFlag;
-#endif
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
 //qDebug("+++%s %d keyPressEvent and key is %d, modifiers=%x", __FILE__, __LINE__, event->key(), int(event->modifiers()));
 #ifdef BBQ10
-	if (event->key() == Qt::Key_Alt){
-//		if (bAltFlag)
-//			bAltFlag = false;
-//		else
-			bAltFlag = true;
+	if (event->key() == Qt::Key_Escape){
+		// When SYM pressed then we get key=Key_Escape and modifiers = 0
+		if (bSymFlag){
+			bSymFlag = false;
+			virtualKeyboard->hide();
+		}else{
+			bSymFlag = true;
+			virtualKeyboard->show();
+		}
+		event->accept();
 		return; // wait for the next button
 	}
-	if (bAltFlag || int(event->modifiers()) == Qt::AltModifier){
-		bAltFlag = false;
+	if (bSymFlag){
+		bSymFlag = false;
+		virtualKeyboard->hide();
+		unsigned char c = 0;
+		unsigned char c1[3] = {0, 0, 0};
+		switch (event->key()){
+		case Qt::Key_Q : c = '~'; break;
+		case Qt::Key_W : c = '`'; break;
+		case Qt::Key_E : c = '{'; break;
+		case Qt::Key_R : c = '}'; break;
+		case Qt::Key_T : c = '['; break;
+		case Qt::Key_Y : c = ']'; break;
+		case Qt::Key_U : c = '<'; break;
+		case Qt::Key_I : c = '>'; break;
+		case Qt::Key_O : c = '^'; break;
+		case Qt::Key_P : c = '%'; break;
+		case Qt::Key_A : c = '='; break;
+		case Qt::Key_S : c1[0] = 0xc3; c1[1] = 0xb7; break; //'Ö'
+		case Qt::Key_D : c1[0] = 0xc2; c1[1] = 0xb1; break; // '±'
+		case Qt::Key_F : c1[0] = 0xe2; c1[1] = 0x80; c1[2] = 0xa2; break; //'¥'
+		case Qt::Key_G : c = '\\'; break;
+		case Qt::Key_H : c = '|'; break;
+		case Qt::Key_J : c = '&'; break;
+		case Qt::Key_K : /*c = 'Ò';*/ break; // Don't know how to pring -(
+		case Qt::Key_L : /*c = 'Ó';*/ break; // Don't know how to pring -(
+		case Qt::Key_Z : c1[0] = 0xc2; c1[1] = 0xa5; break; // '´'
+		case Qt::Key_X : c1[0] = 0xe2; c1[1] = 0x82; c1[2] =  0xac; break; // 'Û'
+		case Qt::Key_C : c1[0] = 0xc2; c1[1] = 0xa3; break; // '£'
+		case Qt::Key_V : c1[0] = 0xc2; c1[1] = 0xbf; break; // 'À'
+		case Qt::Key_B : c1[0] = 0xc2; c1[1] = 0xa1; break; // 'Á'
+		case Qt::Key_N : c1[0] = 0xc2; c1[1] = 0xab; break; // 'Ç'
+		case Qt::Key_M : c1[0] = 0xc2; c1[1] = 0xbb; break; // 'È'
+		case Qt::Key_Dollar : c = '$'; break;
+		}
+		if (c != 0)
+			write(masterFdG, &c, 1);
+		else{
+			write(masterFdG, &c1, 2);
+			if (c1[2] != 0)
+				write(masterFdG, &c1[2], 1);
+		}
+		return;
+	}
+	if (int(event->modifiers()) == Qt::AltModifier){
+		// When single Alt was pressed we get key=1000023 and modifiers = 0, we don't need this event here
+		// if then a key pressed we get key=KEY_CODE and modifiers = Qt::AltModifier
 		// Alt was pressed we need to treat it differently -(
 		char c = 0;
 		switch(event->key()){

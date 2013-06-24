@@ -31,6 +31,9 @@
 #include "bps/virtualkeyboard.h"
 #include "bps/bps.h"
 #endif
+#ifdef BBQ10
+#include "myvk.h"
+#endif
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
@@ -50,7 +53,8 @@ bool bKBhidden = false; // True if VK is not shown
 #endif
 bool bCtrlFlag = false; // A flag that we use to interpret key - whether it should be treated as Ctrl+ or not
 #ifdef BBQ10
-bool bAltFlag = false; // A flag that we use to interpert key - whether it should treated as Alt+ or not
+CMyVirtualKeyboard *virtualKeyboard;
+bool bSymFlag = false; // A flag that we use to check whether VK is shown
 #endif
 
 #ifndef BBQ10
@@ -208,6 +212,8 @@ int main(int argc, char *argv[])
 
     virtualkeyboard_request_events(0); // To catch show/hide VK events
 #endif
-
+#ifdef BBQ10
+    virtualKeyboard = new CMyVirtualKeyboard(mainWindow);
+#endif
     return app.exec();
 }
