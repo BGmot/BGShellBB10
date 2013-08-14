@@ -1,8 +1,18 @@
-Provides you with an ordinary terminal window, i.e. sh running on your BlackBerry PlayBook plus gives you command line ssh, scp and sftp utilities. These utilities are just ports of what you use on any Linux/BSD system so provide (almost) the same functionality and accept the same parameters. Have a question? then please e-mail to support@tm-k.com
+Provides you with an ordinary terminal window, i.e. sh running on your BlackBerry BB10 plus gives you command line ssh, scp and sftp utilities. These utilities are just ports of what you use on any Linux/BSD system so provide (almost) the same functionality and accept the same parameters.
+
 DISCLAIMER: Utilities perform encryption/decryption that might be illegal in your country, it is your responsibility to obey law.
-This is an experimental work (QT and BlackBerry PlayBook/BB10 Native development) which brings you an ordinary shell terminal window which I was missing a lot being an *nix guy. For now just some basic commands are available like ls, echo, uname (try what else you can find). The software is 'work and progress' (alfa version), provided 'as is' and any comments are very welcome!
+This is an experimental work (QT and BlackBerry BB10 Native development) which brings you an ordinary shell terminal window which I was missing a lot being an *nix guy. For now just some basic commands are available like ls, echo, uname (try what else you can find). The software is 'work in progress', provided 'as is' and any comments are very welcome!
+
+This is a port of QTermWidget(http://qtermwidget.sourceforge.net/) to BB10 OS - many thanks to Community for qtermwidget!
 Have a question? then please e-mail to support@tm-k.com
+
 Release notes:
 - 0.0.0.5 - the first Release
 - 0.0.0.6 - read ~/.profile when starting
 - 0.0.0.600 - port to BB 10.0.9
+... real history lost somewhere here ...
+- 0.0.0.700:
+	-- soft keyboard for Alt+ and Ctrl+ key sequences
+	-- ssh tunnels (work even when the app minimized)
+	-- ssh over HTTP Proxy (settings are taken from Connection proxy settings)
+	-- ssh works when the app is installed in Work space of BlackBerry Balance
