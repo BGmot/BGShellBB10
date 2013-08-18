@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+
+<!-- BlackBerry 10 application descriptor file.
+
+	Specifies parameters for identifying, installing, and launching native applications on BlackBerry 10.
+
+-->
+
+	<!-- A universally unique application identifier. Must be unique across all BlackBerry 10 applications.
+		 Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
+	<id>com.BGmot.BGshellPlusFree</id>
+
+	<!-- The name that is displayed in the BlackBerry 10 application installer.
+		 May have multiple values for each language. See samples or xsd schema file. Optional. -->
+	<name>BGShellBB10</name>
+
+	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
+		 Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
+		 An updated version of application must have a versionNumber value higher than the previous version. Required. -->
+	<versionNumber>0.0.0</versionNumber>
+
+	<!-- Fourth digit segment of the package version. First three segments are taken from the
+		 <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
+	<buildId>7070</buildId>
+
+	<!-- Description, displayed in the BlackBerry 10 application installer.
+		 May have multiple values for each language. See samples or xsd schema file. Optional. -->
+	<description>Shell</description>
+
+	<!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
+	<author>BGmot</author>
+
+    <icon>
+       <image>BGshellPlus_icon114x114.png</image>
+    </icon>
+    <asset path="assets/BGshellPlus_icon114x114.png">BGshellPlus_icon114x114.png</asset>
+    
+	<initialWindow>
+		<aspectRatio>portrait</aspectRatio>
+		<autoOrients>false</autoOrients>
+		<systemChrome>none</systemChrome>
+		<transparent>false</transparent>
+	</initialWindow>
+
+	<cascadesTheme>dark</cascadesTheme>
+
+	<!--  The category where the application appears. Either core.games or core.media. -->
+	<category>core.media</category>
+	<configuration id="com.qnx.qcc.toolChain.530812073" name="Device-Debug">
+		<platformArchitecture>armle-v7</platformArchitecture>
+		<asset path="arm/o.le-v7-g/BGShellBB10" entry="true" type="Qnx/Elf">BGShellBB10</asset>
+	</configuration>
+	<configuration id="com.qnx.qcc.toolChain.585662339" name="Device-Release">
+		<platformArchitecture>armle-v7</platformArchitecture>
+		<asset path="arm/o.le-v7/BGShellBB10" entry="true" type="Qnx/Elf">BGShellBB10</asset>
+	</configuration>
+	<configuration id="com.qnx.qcc.toolChain.1526872727" name="Simulator-Debug">
+		<platformArchitecture>x86</platformArchitecture>
+		<asset path="x86/o-g/BGShellBB10" entry="true" type="Qnx/Elf">BGShellBB10</asset>
+	</configuration>
+
+	<!-- Request permission to execute native code.  Required for native applications. -->
+	<permission system="true">run_native</permission>
+    <permission>access_internet</permission>
+    <permission>access_shared</permission>
+    <permission>run_when_backgrounded</permission>
+	<env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+	<env var="PATH" value="app/native" />
+</qnx>
