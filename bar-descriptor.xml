@@ -35,6 +35,7 @@
        <image>BGshellPlus_icon114x114.png</image>
     </icon>
     <asset path="assets/BGshellPlus_icon114x114.png">BGshellPlus_icon114x114.png</asset>
+    <asset path="assets">assets</asset>
     
 	<initialWindow>
 		<aspectRatio>portrait</aspectRatio>
