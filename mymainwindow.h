@@ -3,7 +3,7 @@
  */
 #ifndef MYMAINWINDOW_H
 #define MYMAINWINDOW_H
-#include <QtGui/QMainwindow>
+#include <QtGui/QMainWindow>
 #include <bb/platform/PaymentManager>
 
 class CMyMainWindow : public QMainWindow

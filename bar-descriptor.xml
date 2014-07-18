@@ -67,5 +67,4 @@
     <permission>access_shared</permission>
     <permission>run_when_backgrounded</permission>
 	<env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
-	<env var="PATH" value="app/native" />
 </qnx>
