@@ -17,11 +17,11 @@ QWidget(parent)
 
 // There is nothing to comment here, all button names tell you what they do
 int CMyMenu::MenuInit(){
-	btnCtrlC = new QToolButton(this);
+    btnCtrlC = new QToolButton(this);
     btnCtrlC->setObjectName(QString::fromUtf8("btnCtrlC"));
     btnCtrlC->setText(QString("Ctrl+"));
 
-	btnTab = new QToolButton(this);
+    btnTab = new QToolButton(this);
     btnTab->setObjectName(QString::fromUtf8("btnTab"));
     btnTab->setText(QString("Tab"));
 
@@ -82,7 +82,7 @@ void CMyMenu::SetGeometryPortrait(){
 #endif
 }
 void CMyMenu::SetGeometryLandscape(){
-	this->setGeometry(1206, 0, 73, 357);
+    this->setGeometry(1206, 0, 73, 357);
     btnCtrlC->setGeometry(QRect(1, 1, 71, 51));
     btnTab->setGeometry(QRect(1, 52, 71, 51));
     btnLeft->setGeometry(QRect(1, 103, 71, 51));
@@ -120,12 +120,12 @@ void CMyMenu::on_btnLeft_clicked(){
 	return;
 }
 void CMyMenu::on_btnRight_clicked(){
-	char c[] = {0x1B,0x5B,'C'};
-     if(bCtrlFlag)
-          c[2] = 'c';
-	write(masterFdG, c, 3);
-	console->setFocus();
-	return;
+    char c[] = {0x1B,0x5B,'C'};
+    if(bCtrlFlag)
+         c[2] = 'c';
+    write(masterFdG, c, 3);
+    console->setFocus();
+    return;
 }
 void CMyMenu::on_btnUp_clicked(){
 	char c[] = {0x1B,0x5B,'A'};
