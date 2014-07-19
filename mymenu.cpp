@@ -112,12 +112,12 @@ void CMyMenu::on_btnTab_clicked(){
 	return;
 }
 void CMyMenu::on_btnLeft_clicked(){
-	char c[] = {0x1B,0x5B,'D'};
-     if(bCtrlFlag)
-          c[2] = 'd';
-	write(masterFdG, c, 3);
-	console->setFocus();
-	return;
+    char c[] = {0x1B,0x5B,'D'};
+    if(bCtrlFlag)
+         c[2] = 'd';
+    write(masterFdG, c, 3);
+    console->setFocus();
+    return;
 }
 void CMyMenu::on_btnRight_clicked(){
     char c[] = {0x1B,0x5B,'C'};
