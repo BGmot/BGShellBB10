@@ -6,7 +6,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QFile>
 #include <QtGui/QMessageBox>
-#include <qtCore/Qdir>
+#include <QtCore/QDir>
 #include <bps/netstatus.h>
 #include <qplatformnativeinterface_qpa.h>
 #include <qapplication.h>
