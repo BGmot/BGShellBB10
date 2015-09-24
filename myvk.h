@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2012 BGmot <support@tm-k.com>
  */
-#ifdef BBQ10
 #ifndef MYVK_H
 #define MYVK_H
 
@@ -13,11 +12,6 @@ class CMyVirtualKeyboard : public QLabel
 
 public:
     CMyVirtualKeyboard(QWidget *parent);
-    //void SetGeometry();
     virtual ~CMyVirtualKeyboard(){};
-
-//private slots:
-//	void on_btnCtrlC_clicked();
 };
-#endif
 #endif

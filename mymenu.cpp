@@ -46,50 +46,24 @@ int CMyMenu::MenuInit(){
     btnEsc->setText(QString("Esc"));
 
     QMetaObject::connectSlotsByName(this);
-#ifndef BBQ10
-    QRect r = QApplication::desktop()->screenGeometry(0); // Landscape 1023x599
-	if (r.width() > 800)
-		SetGeometryLandscape();
-	else
-		SetGeometryPortrait();
-#else
-	SetGeometryPortrait();
-#endif
+
+    SetGeometryPortrait();
+
 	return 0;
 }
+
 void CMyMenu::SetGeometryPortrait(){
 	QRect r = QApplication::desktop()->screenGeometry(0);
-#ifndef BBQ10
-	this->setGeometry(0, 0, r.width(), 103);
-	btnCtrlC->setGeometry(QRect(2, 1, 110, 101));
-	btnTab  ->setGeometry(QRect(112, 1, 100, 101));
-	btnLeft ->setGeometry(QRect(112+1*100+1*2, 1, 100, 101));
-	btnRight->setGeometry(QRect(112+2*100+2*2, 1, 100, 101));
-	btnUp   ->setGeometry(QRect(112+3*100+3*2, 1, 100, 101));
-	btnDown ->setGeometry(QRect(112+4*100+4*2, 1, 100, 101));
-	btnEsc  ->setGeometry(QRect(112+5*100+5*2, 1, 100, 101));
-#else
 	int nW = r.width();
-	int nH = r.height();
-	this->setGeometry(0, nH-103, nW, 103);
-	btnCtrlC->setGeometry(QRect(2, 1, 110, 101));
-	btnTab  ->setGeometry(QRect(112, 1, 100, 101));
-	btnLeft ->setGeometry(QRect(112+1*100+1*2, 1, 100, 101));
-	btnRight->setGeometry(QRect(112+2*100+2*2, 1, 100, 101));
-	btnUp   ->setGeometry(QRect(112+3*100+3*2, 1, 100, 101));
-	btnDown ->setGeometry(QRect(112+4*100+4*2, 1, 100, 101));
-	btnEsc  ->setGeometry(QRect(112+5*100+5*2, 1, 100, 101));
-#endif
-}
-void CMyMenu::SetGeometryLandscape(){
-    this->setGeometry(1206, 0, 73, 357);
-    btnCtrlC->setGeometry(QRect(1, 1, 71, 51));
-    btnTab->setGeometry(QRect(1, 52, 71, 51));
-    btnLeft->setGeometry(QRect(1, 103, 71, 51));
-    btnRight->setGeometry(QRect(1, 154, 71, 51));
-    btnUp->setGeometry(QRect(1, 205, 71, 51));
-    btnDown->setGeometry(QRect(1, 256, 71, 51));
-    btnEsc->setGeometry(QRect(1, 307, 71, 50));
+	int btnW = nW/7;
+	this->setGeometry(0, 0, nW, 103);
+	btnCtrlC->setGeometry(QRect(2, 1, btnW-1, 101));
+	btnTab  ->setGeometry(QRect(1*btnW+1, 1, btnW-1, 101));
+	btnLeft ->setGeometry(QRect(2*btnW+1, 1, btnW-1, 101));
+	btnRight->setGeometry(QRect(3*btnW+1, 1, btnW-1, 101));
+	btnUp   ->setGeometry(QRect(4*btnW+1, 1, btnW-1, 101));
+	btnDown ->setGeometry(QRect(5*btnW+1, 1, btnW-1, 101));
+	btnEsc  ->setGeometry(QRect(6*btnW+1, 1, btnW-1, 101));
 }
 
 void CMyMenu::on_btnCtrlC_clicked(){

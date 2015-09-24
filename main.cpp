@@ -27,37 +27,26 @@
 #include "mymenu.h"
 #include "mysystemmenu.h"
 #include "mymainwindow.h"
-#ifndef BBQ10
 #include "bps/virtualkeyboard.h"
 #include "bps/bps.h"
-#endif
-#ifdef BBQ10
 #include "myvk.h"
-#endif
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
 int pidG_ = -1;     // child's PID
-#ifndef BBQ10
 int nKBHeight = 0;  // current Virtual Keyboard height
 int nMaxKBHeight = 0; // Maximum Keyboard Height in current mode (Landscape/Portrait)
-#endif
 QTermWidget *console; // our 'main' widget, let's make it global so it is available in Menu widget
 CMyMainWindow *mainWindow;
 CMyMenu *Menu;      // Menu with soft buttons
 CMySystemMenu *SystemMenu; // System menu from 'swipe down' event
 QFont font;
-#ifndef BBQ10
 bool bOrientationJustChanged = false; // If we just changed screen orientation then do not handle hide/show keyboard event (skip one ScreenAvailableGeometry event)
 bool bKBhidden = false; // True if VK is not shown
-#endif
 bool bCtrlFlag = false; // A flag that we use to interpret key - whether it should be treated as Ctrl+ or not
-#ifdef BBQ10
-CMyVirtualKeyboard *virtualKeyboard;
-bool bSymFlag = false; // A flag that we use to check whether VK is shown
-#endif
+CMyVirtualKeyboard *virtualKeyboard; // Used only for Q10 when you press SYM key
+bool bSymFlag = false; // A flag that we use to check whether my VK is shown
 
-#ifndef BBQ10
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
 bool myEventFilter(void *message) {
@@ -66,21 +55,13 @@ bool myEventFilter(void *message) {
     if (event) {
     	int domain = bps_event_get_domain(event);
     	if (domain == virtualkeyboard_get_domain()) {
+    	    // We get here only if device has virtual keyboard (like Z10, Passport)
     		unsigned int ec = bps_event_get_code(event);
     		 if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
     			int nNewKBHeight = virtualkeyboard_event_get_height(event);
     			virtualkeyboard_get_height(&nNewKBHeight);
-    			if ( nNewKBHeight != nKBHeight){
+    			if ( nNewKBHeight != nKBHeight)
     				nKBHeight = nNewKBHeight;
-    				QRect r = QApplication::desktop()->screenGeometry(0);
-    				if (r.width() > 800){
-    					// Landscape
-    					console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
-    				}else{
-    					// Portrait - keyboard is taller
-    					console->setGeometry(0, 53, r.width(), r.height()-nKBHeight-53);
-    				}
-    			}
     		}
     		QRect r = QApplication::desktop()->screenGeometry(0);
     		if (ec == VIRTUALKEYBOARD_EVENT_VISIBLE){
@@ -91,9 +72,8 @@ bool myEventFilter(void *message) {
 				bKBhidden = true;
 				nKBHeight = 0;
     		}
-			if (r.width() > 800) console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight); // Landscape
-			else console->setGeometry(0, 103, r.width(), r.height()-nKBHeight-103); // Portrait
-
+    		console->setGeometry(0, 103, r.width(), r.height()-nKBHeight-103);
+    		
 			//font = QFont(QString("Courier New"), 6);
 			font.setPixelSize(mainWindow->nFontSize);
 		    font.setStyle(QFont::StyleNormal);
@@ -104,7 +84,6 @@ bool myEventFilter(void *message) {
  	mainEventFilter(message); // Call replaced event filter so we deliever everything to Qt that runs in background
 	return false;
 }
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -172,21 +151,9 @@ int main(int argc, char *argv[])
     font.setWeight(QFont::Normal);
 	console->setTerminalFont(font);
 
-#ifndef BBQ10
-    // We start the app with shown keyboard
+    // We start the app with shown keyboard (it does not make any harm for devices with physical keyboard)
 	virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
-	if (r.width() > 800){
-		// Landscape
-		virtualkeyboard_get_height(&nKBHeight);
-		console->setGeometry(0, 0, r.width()-73, r.height()-nKBHeight);
-	}else{
-		// Portrait - keyboard is higher
-		virtualkeyboard_get_height(&nKBHeight);
-		console->setGeometry(0, 103, r.width()+1, r.height()-nKBHeight-102);
-	}
-#else
-	console->setGeometry(0, 0, r.width()+1, r.height()-103);
-#endif
+	console->setGeometry(0, 103, r.width()+1, r.height()-nKBHeight-103);
     console->setScrollBarPosition(QTermWidget::ScrollBarRight);
 
     // Our 'soft buttons' menu
@@ -201,19 +168,18 @@ int main(int argc, char *argv[])
 
     mainWindow->show();    
 
-#ifndef BBQ10
     // Install event filter
     mainEventFilter = QAbstractEventDispatcher::instance()->setEventFilter(myEventFilter);
 
-    // Show virtual keyboard
+    // Show virtual keyboard (does nothing for devices with physical keyboard)
     QEvent event(QEvent::RequestSoftwareInputPanel);
     QApplication::sendEvent(console, &event);
     virtualkeyboard_get_height(&nMaxKBHeight); // Init maximum VK height
 
     virtualkeyboard_request_events(0); // To catch show/hide VK events
-#endif
-#ifdef BBQ10
+
+    // Special keyboard that is shown only for Q10 when you press SYM
     virtualKeyboard = new CMyVirtualKeyboard(mainWindow);
-#endif
+
     return app.exec();
 }

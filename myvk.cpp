@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2013 BGmot <support@tm-k.com>
  */
-#ifdef BBQ10
 #include <QtGui/QPixmap>
 #include "qtermwidget.h"
 #include "myvk.h"
@@ -16,4 +15,3 @@ CMyVirtualKeyboard::CMyVirtualKeyboard(QWidget *parent)
 	setPixmap(image);
 	setGeometry(0, r.height()-image.height(), image.width(), image.height());
 }
-#endif
