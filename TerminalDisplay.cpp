@@ -54,11 +54,9 @@
 
 #include "mymenu.h"
 #include "mymainwindow.h"
-#ifdef BBQ10
 #include "myvk.h"
 extern bool bSymFlag;
 extern CMyVirtualKeyboard *virtualKeyboard;
-#endif
 extern int masterFdG;
 extern bool bCtrlFlag;
 extern CMyMenu *Menu;
@@ -2300,7 +2298,6 @@ void TerminalDisplay::setFlowControlWarningEnabled( bool enable )
 void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 {
 //qDebug("+++%s %d keyPressEvent and key is %d, modifiers=%x", __FILE__, __LINE__, event->key(), int(event->modifiers()));
-#ifdef BBQ10
 	if (event->key() == Qt::Key_Escape){
 		// When SYM pressed then we get key=Key_Escape and modifiers = 0
 		if (bSymFlag){
@@ -2330,21 +2327,21 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 		case Qt::Key_O : c = '^'; break;
 		case Qt::Key_P : c = '%'; break;
 		case Qt::Key_A : c = '='; break;
-		case Qt::Key_S : c1[0] = 0xc3; c1[1] = 0xb7; break; //'Ö'
-		case Qt::Key_D : c1[0] = 0xc2; c1[1] = 0xb1; break; // '±'
-		case Qt::Key_F : c1[0] = 0xe2; c1[1] = 0x80; c1[2] = 0xa2; break; //'¥'
+		case Qt::Key_S : c1[0] = 0xc3; c1[1] = 0xb7; break; //'ï¿½'
+		case Qt::Key_D : c1[0] = 0xc2; c1[1] = 0xb1; break; // 'ï¿½'
+		case Qt::Key_F : c1[0] = 0xe2; c1[1] = 0x80; c1[2] = 0xa2; break; //'ï¿½'
 		case Qt::Key_G : c = '\\'; break;
 		case Qt::Key_H : c = '|'; break;
 		case Qt::Key_J : c = '&'; break;
-		case Qt::Key_K : /*c = 'Ò';*/ break; // Don't know how to pring -(
-		case Qt::Key_L : /*c = 'Ó';*/ break; // Don't know how to pring -(
-		case Qt::Key_Z : c1[0] = 0xc2; c1[1] = 0xa5; break; // '´'
-		case Qt::Key_X : c1[0] = 0xe2; c1[1] = 0x82; c1[2] =  0xac; break; // 'Û'
-		case Qt::Key_C : c1[0] = 0xc2; c1[1] = 0xa3; break; // '£'
-		case Qt::Key_V : c1[0] = 0xc2; c1[1] = 0xbf; break; // 'À'
-		case Qt::Key_B : c1[0] = 0xc2; c1[1] = 0xa1; break; // 'Á'
-		case Qt::Key_N : c1[0] = 0xc2; c1[1] = 0xab; break; // 'Ç'
-		case Qt::Key_M : c1[0] = 0xc2; c1[1] = 0xbb; break; // 'È'
+		case Qt::Key_K : /*c = 'ï¿½';*/ break; // Don't know how to pring -(
+		case Qt::Key_L : /*c = 'ï¿½';*/ break; // Don't know how to pring -(
+		case Qt::Key_Z : c1[0] = 0xc2; c1[1] = 0xa5; break; // 'ï¿½'
+		case Qt::Key_X : c1[0] = 0xe2; c1[1] = 0x82; c1[2] =  0xac; break; // 'ï¿½'
+		case Qt::Key_C : c1[0] = 0xc2; c1[1] = 0xa3; break; // 'ï¿½'
+		case Qt::Key_V : c1[0] = 0xc2; c1[1] = 0xbf; break; // 'ï¿½'
+		case Qt::Key_B : c1[0] = 0xc2; c1[1] = 0xa1; break; // 'ï¿½'
+		case Qt::Key_N : c1[0] = 0xc2; c1[1] = 0xab; break; // 'ï¿½'
+		case Qt::Key_M : c1[0] = 0xc2; c1[1] = 0xbb; break; // 'ï¿½'
 		case Qt::Key_Dollar : c = '$'; break;
 		}
 		if (c != 0)
@@ -2395,7 +2392,7 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 			write(masterFdG, &c, 1);
 		return;
 	}
-#endif
+
 	// Let's treat 'Soft' Ctrl+ case here
 	if (bCtrlFlag){
 		bCtrlFlag = false;
