@@ -30,6 +30,7 @@
 #include "bps/virtualkeyboard.h"
 #include "bps/bps.h"
 #include "myvk.h"
+#include "mydevicetype.h"
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
@@ -46,6 +47,8 @@ bool bKBhidden = false; // True if VK is not shown
 bool bCtrlFlag = false; // A flag that we use to interpret key - whether it should be treated as Ctrl+ or not
 CMyVirtualKeyboard *virtualKeyboard; // Used only for Q10 when you press SYM key
 bool bSymFlag = false; // A flag that we use to check whether my VK is shown
+bool bShiftFlag = false; // SHIFT is active (was pressed), we need it for BB Passport that doesn't handle Shift properly
+uDeviceType dtDevice = DONTCARE; // We need to differentiate between BB Passport and other devices
 
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
@@ -57,7 +60,7 @@ bool myEventFilter(void *message) {
     	if (domain == virtualkeyboard_get_domain()) {
     	    // We get here only if device has virtual keyboard (like Z10, Passport)
     		unsigned int ec = bps_event_get_code(event);
-    		 if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
+    		if (!bKBhidden && ec == VIRTUALKEYBOARD_EVENT_INFO){
     			int nNewKBHeight = virtualkeyboard_event_get_height(event);
     			virtualkeyboard_get_height(&nNewKBHeight);
     			if ( nNewKBHeight != nKBHeight)
@@ -142,6 +145,8 @@ int main(int argc, char *argv[])
     mainWindow = new CMyMainWindow();
     QRect r = QApplication::desktop()->screenGeometry(0);
     mainWindow->resize(r.width()+1, r.height()+1);
+    if (r.width() == 1440)
+        dtDevice = BB_PASSPORT;
 
     console = new QTermWidget(1, mainWindow);
 
@@ -149,7 +154,7 @@ int main(int argc, char *argv[])
     font.setPixelSize(mainWindow->nFontSize);
     font.setStyle(QFont::StyleNormal);
     font.setWeight(QFont::Normal);
-	console->setTerminalFont(font);
+    console->setTerminalFont(font);
 
     // We start the app with shown keyboard (it does not make any harm for devices with physical keyboard)
 	virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);

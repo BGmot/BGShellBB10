@@ -55,12 +55,15 @@
 #include "mymenu.h"
 #include "mymainwindow.h"
 #include "myvk.h"
+#include "mydevicetype.h"
 extern bool bSymFlag;
 extern CMyVirtualKeyboard *virtualKeyboard;
 extern int masterFdG;
 extern bool bCtrlFlag;
+extern bool bShiftFlag;
 extern CMyMenu *Menu;
 extern CMyMainWindow *mainWindow;
+extern uDeviceType dtDevice;
 
 using namespace Konsole;
 
@@ -2309,7 +2312,12 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
 		}
 		event->accept();
 		return; // wait for the next button
-	}
+	}else if (event->key() == Qt::Key_Shift){
+	    if (bShiftFlag)
+	        bShiftFlag = false;
+	    else
+	        bShiftFlag = true;
+        }
 	if (bSymFlag){
 		bSymFlag = false;
 		virtualKeyboard->hide();
@@ -2486,7 +2494,11 @@ void TerminalDisplay::keyPressEvent( QKeyEvent* event )
     }
 
     if ( emitKeyPressSignal )
-        emit keyPressedSignal(event);
+        if (bShiftFlag && dtDevice == BB_PASSPORT){
+            QKeyEvent* event_caps = new QKeyEvent(QEvent::KeyPress, event->key(), event->modifiers(), event->text().toUpper());
+            emit keyPressedSignal(event_caps);
+        }else
+            emit keyPressedSignal(event);
 
     event->accept();
 }
