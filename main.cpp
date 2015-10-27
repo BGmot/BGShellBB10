@@ -92,16 +92,17 @@ int main(int argc, char *argv[])
 {
     // Let's search for programs first in our own 'app' folder
     QString oldPath = qgetenv("PATH");
-    QString newPath = "app/native:"+oldPath;
-    qputenv("PATH", newPath.toAscii().data());
-
-    // We need to store our working folder somewhere, it is needed for ssh later
-    int res = system ("echo -n `pwd`\"/data/\" > data/.myhome");
-    if (res == -1){
-    	fprintf(stderr, "Can't determine my home folder location, terminating");
-    	exit(-1);
+    QString oldLDPath = qgetenv("LD_LIBRARY_PATH");
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) == NULL){
+        fprintf(stderr, "Can't determine my current folder, terminating");
+        exit(-1);
     }
-
+    QString newPath = QString(cwd) + "/app/native:" + oldPath;
+    qputenv("PATH", newPath.toAscii().data());
+    newPath = QString(cwd) + "/app/native/lib:/usr/lib/qt4/lib:" + oldLDPath;
+    qputenv("LD_LIBRARY_PATH", newPath.toAscii().data());
+    
 	// Init file descriptors opening proper devices
 	masterFdG = ::open("/dev/ptyp1", O_RDWR);
 	slaveFdG = ::open("/dev/ttyp1", O_RDWR | O_NOCTTY);
