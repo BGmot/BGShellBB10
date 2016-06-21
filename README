@@ -1,18 +1,78 @@
-Provides you with an ordinary terminal window, i.e. sh running on your BlackBerry BB10 plus gives you command line ssh, scp and sftp utilities. These utilities are just ports of what you use on any Linux/BSD system so provide (almost) the same functionality and accept the same parameters.
+Provides you with an ordinary terminal window, i.e. sh running on your BlackBerry BB10 and gives you 
+command line OpeSSH suite utilities. These utilities are just ports of what you use on any Linux/BSD 
+system so they provide (almost) the same functionality and accept the same parameters.
 
-DISCLAIMER: Utilities perform encryption/decryption that might be illegal in your country, it is your responsibility to obey law.
-This is an experimental work (QT and BlackBerry BB10 Native development) which brings you an ordinary shell terminal window which I was missing a lot being an *nix guy. For now just some basic commands are available like ls, echo, uname (try what else you can find). The software is 'work in progress', provided 'as is' and any comments are very welcome!
+DISCLAIMER: Utilities perform encryption/decryption that might be illegal in your country, it is your 
+responsibility to obey law.
+This is an experimental work (QT and BlackBerry BB10 Native development) which brings you an ordinary 
+shell terminal window which I was missing a lot being a *nix guy. For now just some basic commands 
+are available like ls, echo, uname (try what else you can find). The software is 'work in progress', 
+provided 'as is' and any comments are very welcome!
 
-This is a port of QTermWidget(http://qtermwidget.sourceforge.net/) to BB10 OS - many thanks to Community for qtermwidget!
-Have a question? then please e-mail to support@tm-k.com
+This is a port of QTermWidget(http://qtermwidget.sourceforge.net/) to BB10 OS - many thanks to 
+Community for qtermwidget!
 
-Release notes:
-- 0.0.0.5 - the first Release
-- 0.0.0.6 - read ~/.profile when starting
-- 0.0.0.600 - port to BB 10.0.9
-... real history lost somewhere here ...
-- 0.0.0.700:
+List of features:
+    -- terminal window with following command line tools: ssh, scp, sftp, ssh-agent, ssh-keygen, ssh-add
 	-- soft keyboard for Alt+ and Ctrl+ key sequences
 	-- ssh tunnels (work even when the app minimized)
-	-- ssh over HTTP Proxy (settings are taken from Connection proxy settings)
+	-- ssh over HTTP Proxy (working when installed in both Work and Personal space)
 	-- ssh works when the app is installed in Work space of BlackBerry Balance
+
+Read more on this project at http://bgmot.com/BGShellPlus
+
+Don't ask questions in Reviews section, they will not be answered. Instead please e-mail support@bgmot.com
+	
+Release notes:
+- 0.0.0.5 - the first Release
+
+- 0.0.0.6
+    -- read ~/.profile when starting
+
+- 0.0.0.600 - port to BB 10.0.9
+
+- 0.0.0.604
+    -- Font size adjusted to BB10.0.9.1103
+    
+- 0.0.0.605
+    -- Fixed Buttons responsiveness 
+    -- Fix keyboard type (Enter button now shows as Enter)
+
+- 0.0.0.606
+    -- now you can generate any CTRL+ codes just tap on the Ctrl+ soft button and then required code on virtual keyboard. - now this shell can run in background mode (when minimized) - perfect use case for tunneling your SMTP and IMAP traffic securely by means of ssh tunnels. All you need is to create needed tunnels in terminal window like 
+       ssh -p 2222 user@host.domain.eg -L 2225:your.mailserver:25 -L 2143:your.mailserver:143 etc etc. 
+       Then in BB10 mail account settings use for SMTP 127.0.0.1 port 2225 and 
+       for IMAP -127.0.0.1 port 2143. Of course it is possible to tunnel anything 
+       you want. Thanks for this great idea to Nick W.
+
+- 0.0.0.607
+    -- Added SSH connections using HTTP Proxy. When installed in Personal space of 
+       BlackBerry Balance then it reads proxy settings from your current connection. 
+       When installed in Work space it reads proxy settings pushed by your BES.
+       Just swipe down and check Use HTTP Proxy in Settings. BETA feature, feedback 
+       would be greatly appreciated, please e-mail to bgmot@tm-k.com.
+
+- 0.0.0.608
+    -- fixed little bug in Work perimeter
+    -- console Font Size option added
+    
+- 0.0.0.700
+    -- minor fixes for Fonts management
+
+- 0.0.0.6060 (version only for devices with physical keyboard)
+    -- port to devices with physical keyboard
+
+- 0.0.0.7070 (version only for devices with physical keyboard)
+    -- Fonts management - SSH working with HTTP proxy (can be installed in Work perimeter of BlackBerry Balance)
+    -- virtual keyboard for SYM characters
+
+- 0.0.1.1
+    -- One single version for all types of devices - BlackBerry Passport supported now - 
+       it is possible to run ssh, scp and sftp from any folder *
+    -- Known bug: Shift Key on Passport sticks - you have to press it again to unshift
+
+- 0.0.1.2
+	-- Move menu bar to the bottom of the screen (too many people asked for that) - Fix running when minimized (useful for tunnels)
+
+- 0.0.2.0
+	-- ssh-keygen, ssh-agent, ssh-add utilities added
