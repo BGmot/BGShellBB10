@@ -75,7 +75,8 @@ bool myEventFilter(void *message) {
 				bKBhidden = true;
 				nKBHeight = 0;
     		}
-    		console->setGeometry(0, 103, r.width(), r.height()-nKBHeight-103);
+    		console->setGeometry(0, 0, r.width()+1, r.height()-nKBHeight-103);
+    		Menu->SetGeometryPortrait(nKBHeight);
     		
 			//font = QFont(QString("Courier New"), 6);
 			font.setPixelSize(mainWindow->nFontSize);
@@ -159,7 +160,7 @@ int main(int argc, char *argv[])
 
     // We start the app with shown keyboard (it does not make any harm for devices with physical keyboard)
 	virtualkeyboard_change_options(VIRTUALKEYBOARD_LAYOUT_DEFAULT, VIRTUALKEYBOARD_ENTER_DEFAULT);
-	console->setGeometry(0, 103, r.width()+1, r.height()-nKBHeight-103);
+	console->setGeometry(0, 0, r.width()+1, r.height()-nKBHeight-103);
     console->setScrollBarPosition(QTermWidget::ScrollBarRight);
 
     // Our 'soft buttons' menu

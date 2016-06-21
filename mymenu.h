@@ -14,7 +14,7 @@ class CMyMenu : public QWidget
 public:
     CMyMenu(QWidget *parent);
     int MenuInit();
-    void SetGeometryPortrait();
+    void SetGeometryPortrait(int);
     void SetGeometryLandscape();
     virtual ~CMyMenu(){};
 	//void focusOutEvent( QFocusEvent * event );

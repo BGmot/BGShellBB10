@@ -47,16 +47,17 @@ int CMyMenu::MenuInit(){
 
     QMetaObject::connectSlotsByName(this);
 
-    SetGeometryPortrait();
+    SetGeometryPortrait(0);
 
-	return 0;
+    return 0;
 }
 
-void CMyMenu::SetGeometryPortrait(){
+void CMyMenu::SetGeometryPortrait(int nKBHeight){
 	QRect r = QApplication::desktop()->screenGeometry(0);
 	int nW = r.width();
+	int nH = r.height();
 	int btnW = nW/7;
-	this->setGeometry(0, 0, nW, 103);
+	this->setGeometry(0, nH-103-nKBHeight, nW, 103);
 	btnCtrlC->setGeometry(QRect(2, 1, btnW-1, 101));
 	btnTab  ->setGeometry(QRect(1*btnW+1, 1, btnW-1, 101));
 	btnLeft ->setGeometry(QRect(2*btnW+1, 1, btnW-1, 101));
