@@ -14,10 +14,10 @@ Community for qtermwidget!
 
 List of features:
     -- terminal window with following command line tools: ssh, scp, sftp, ssh-agent, ssh-keygen, ssh-add
-	-- soft keyboard for Alt+ and Ctrl+ key sequences
-	-- ssh tunnels (work even when the app minimized)
-	-- ssh over HTTP Proxy (working when installed in both Work and Personal space)
-	-- ssh works when the app is installed in Work space of BlackBerry Balance
+    -- soft keyboard for Alt+ and Ctrl+ key sequences
+    -- ssh tunnels (work even when the app minimized)
+    -- ssh over HTTP Proxy (working when installed in both Work and Personal space)
+    -- ssh works when the app is installed in Work space of BlackBerry Balance
 
 Read more on this project at http://bgmot.com/BGShellPlus
 
@@ -39,7 +39,10 @@ Release notes:
     -- Fix keyboard type (Enter button now shows as Enter)
 
 - 0.0.0.606
-    -- now you can generate any CTRL+ codes just tap on the Ctrl+ soft button and then required code on virtual keyboard. - now this shell can run in background mode (when minimized) - perfect use case for tunneling your SMTP and IMAP traffic securely by means of ssh tunnels. All you need is to create needed tunnels in terminal window like 
+    -- now you can generate any CTRL+ codes just tap on the Ctrl+ soft button and then required code on virtual 
+       keyboard. - now this shell can run in background mode (when minimized) - perfect use case for tunneling 
+       your SMTP and IMAP traffic securely by means of ssh tunnels. All you need is to create needed tunnels 
+       in terminal window like 
        ssh -p 2222 user@host.domain.eg -L 2225:your.mailserver:25 -L 2143:your.mailserver:143 etc etc. 
        Then in BB10 mail account settings use for SMTP 127.0.0.1 port 2225 and 
        for IMAP -127.0.0.1 port 2143. Of course it is possible to tunnel anything 
@@ -72,7 +75,7 @@ Release notes:
     -- Known bug: Shift Key on Passport sticks - you have to press it again to unshift
 
 - 0.0.1.2
-	-- Move menu bar to the bottom of the screen (too many people asked for that) - Fix running when minimized (useful for tunnels)
+    -- Move menu bar to the bottom of the screen (too many people asked for that) - Fix running when minimized (useful for tunnels)
 
 - 0.0.2.0
-	-- ssh-keygen, ssh-agent, ssh-add utilities added
+    -- ssh-keygen, ssh-agent, ssh-add utilities added
