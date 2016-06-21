@@ -66,7 +66,8 @@ Release notes:
     -- port to devices with physical keyboard
 
 - 0.0.0.7070 (version only for devices with physical keyboard)
-    -- Fonts management - SSH working with HTTP proxy (can be installed in Work perimeter of BlackBerry Balance)
+    -- Fonts management 
+    -- SSH working with HTTP proxy (can be installed in Work perimeter of BlackBerry Balance)
     -- virtual keyboard for SYM characters
 
 - 0.0.1.1
