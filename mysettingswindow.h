@@ -5,7 +5,8 @@
 #define MYSETTINGSWINDOW_H
 #include <QtGui/QWidget>
 #include <QtGui/QCheckBox>
-#include <QtGui/QButtonGroup>
+#include <QtGui/QLabel>
+#include <QtGui/QToolButton>
 
 class CMySettingsWindow : public QWidget
 {
@@ -16,9 +17,12 @@ public:
     int Init();
 
     QCheckBox *cbxProxyOn;
-    QButtonGroup *btngrFontSize;
+    QLabel *lblFontSample;
+    QToolButton *btnClose;
+    
 private slots:
-	void on_FontSizeChanged(QAbstractButton *);
+    void on_cbFontSize_currentIndexChanged(const QString &);
+    void on_btnClose_clicked();
 };
 
 #endif

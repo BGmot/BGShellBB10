@@ -14,7 +14,6 @@ CMySettingsWindow::CMySettingsWindow(QWidget *parent) :
 	QWidget(parent)
 {
 	setWindowModality(Qt::ApplicationModal);
-
 }
 
 int CMySettingsWindow::Init(){
@@ -60,67 +59,68 @@ int CMySettingsWindow::Init(){
     gb1->setFlat(false);
     QHBoxLayout *hlayout = new QHBoxLayout;
     gb1->setLayout(hlayout);
-    QRadioButton *rbtnSmall	 = new QRadioButton(tr("Small"));
-    QRadioButton *rbtnNorm	 = new QRadioButton(tr("Norm"));
-    QRadioButton *rbtnLarge	 = new QRadioButton(tr("Large"));
-    QRadioButton *rbtnXLarge = new QRadioButton(tr("XLarge"));
-    switch (mainWindow->nFontSize){
-    case 20:
-    	rbtnSmall->setChecked(true);
-    	break;
-    case 22:
-    	rbtnNorm->setChecked(true);
-    	break;
-    case 24:
-    	rbtnLarge->setChecked(true);
-    	break;
-    case 26:
-    	rbtnXLarge->setChecked(true);
-    	break;
-    default:
-    	rbtnNorm->setChecked(true);
-    	break;
+
+    lblFontSample = new QLabel(tr("Sample 123"), this);
+    lblFontSample->setObjectName(tr("lblFontSample"));
+    QFont fontSample = QFont(QString("Courier New"), 6);
+    fontSample.setPixelSize(mainWindow->nFontSize);
+    fontSample.setStyle(QFont::StyleNormal);
+    fontSample.setWeight(QFont::Normal);
+    lblFontSample->setFont(fontSample);
+
+    this->setObjectName(tr("wdgSettingsWindow"));
+    QComboBox *cbFontSize = new QComboBox(gb1);
+    cbFontSize->setObjectName(tr("cbFontSize"));
+    cbFontSize->setMaxVisibleItems(9);
+    for(int i=18; i < 52; i += 4){
+      cbFontSize->addItem(QString::number(i));
+      if (i == mainWindow->nFontSize)
+        cbFontSize->setCurrentIndex(cbFontSize->count()-1); // Current Font size
     }
-    btngrFontSize = new QButtonGroup();
-    btngrFontSize->addButton(rbtnSmall);
-    btngrFontSize->addButton(rbtnNorm);
-    btngrFontSize->addButton(rbtnLarge);
-    btngrFontSize->addButton(rbtnXLarge);
-    QObject::connect(btngrFontSize, SIGNAL(buttonPressed(QAbstractButton *)), this, SLOT(on_FontSizeChanged(QAbstractButton *)));
-    hlayout->addWidget(rbtnSmall);
-    hlayout->addWidget(rbtnNorm);
-    hlayout->addWidget(rbtnLarge);
-    hlayout->addWidget(rbtnXLarge);
+
+    hlayout->addWidget(lblFontSample);
+    hlayout->addWidget(cbFontSize);
+
     layout->addWidget(gb1);
 
-    QLabel *lblHint = new QLabel(tr("\nHint: Swipe down again to hide this dialog"));
-    layout->addWidget(lblHint);
+    btnClose = new QToolButton(this);
+    btnClose->setObjectName(QString::fromUtf8("btnClose"));
+    btnClose->setText(QString("Close"));
+    btnClose->setMinimumWidth(nWidth/2);
+    layout->addWidget(btnClose);
+    layout->setAlignment(btnClose, Qt::AlignHCenter);
 
     gb->setLayout(layout);
+
+    QMetaObject::connectSlotsByName(this);
 
 	return 0;
 }
 
 extern QTermWidget *console;
-void CMySettingsWindow::on_FontSizeChanged(QAbstractButton *button){
-	QString btn = button->text();
-	int nSize = 22;
-	if (!btn.compare(QString("Small"))){
-		nSize = 20;
-	}else if (!btn.compare(QString("Norm"))){
-		nSize = 22;
-	}else if (!btn.compare(QString("Large"))){
-		nSize = 24;
-	}else if (!btn.compare(QString("XLarge"))){
-		nSize = 26;
-	}
+void CMySettingsWindow::on_cbFontSize_currentIndexChanged(const QString & text){
+    // User selected something from drop-down list
+    int nSize = text.toInt();
 	mainWindow->nFontSize = nSize;
+
+	// Save new settings
 	QSettings settings;
 	settings.setValue("FontSize", nSize);
 
+	// Create new Font
 	QFont newfont = QFont(QString("Courier New"), 6);
 	newfont.setPixelSize(nSize);
     newfont.setStyle(QFont::StyleNormal);
     newfont.setWeight(QFont::Normal);
-	console->setTerminalFont(newfont);
+
+    // Apply new Font/size to Sample Text
+    lblFontSample->setFont(newfont);
+
+    // Apply new Font/size to console
+    console->setTerminalFont(newfont);
+}
+
+void CMySettingsWindow::on_btnClose_clicked(){
+    QEvent* event= new QEvent(QEvent::PlatformPanel);
+    QApplication::sendEvent(this->parent(), event);
 }
