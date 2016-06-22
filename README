@@ -82,3 +82,4 @@ Release notes:
 
 - 0.0.2.0
     -- ssh-keygen, ssh-agent, ssh-add utilities added
+    -- more flexibility in choosing console font size
