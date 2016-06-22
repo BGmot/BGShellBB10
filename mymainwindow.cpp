@@ -41,7 +41,7 @@ CMyMainWindow::CMyMainWindow() :
 }
 
 bool CMyMainWindow::event(QEvent *e){
-//	qDebug()<<"CMyMainWindow::event() type="<<e->type();
+    //qDebug()<<"CMyMainWindow::event() type="<<e->type();
 	if (e->type() ==  QEvent::PlatformPanel){
 		// Swipe-down detected
 		if (SystemMenu->wdgDonateWindow)
