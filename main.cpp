@@ -27,10 +27,16 @@
 #include "mymenu.h"
 #include "mysystemmenu.h"
 #include "mymainwindow.h"
-#include "bps/virtualkeyboard.h"
-#include "bps/bps.h"
+#include <bps/virtualkeyboard.h>
 #include "myvk.h"
 #include "mydevicetype.h"
+
+// Headers for trackpad event handling
+#include <screen/screen.h>
+#include <bps/bps.h>
+#include <bps/screen.h>
+#include <bps/event.h>
+#include <bps/navigator.h>
 
 int masterFdG = -1; // will be used in parent process
 int slaveFdG = -1;  // will be used in child process
@@ -52,9 +58,63 @@ uDeviceType dtDevice = DONTCARE; // We need to differentiate between BB Passport
 
 static QAbstractEventDispatcher::EventFilter mainEventFilter = 0; // To store old EventFilter (Application's)
 
+void handleTrackpadEvent(bps_event_t *event) {
+    //handle trackpad events from BB Classic
+    int screen_val, button;
+    int displacement[2];
+    int sens;   //sensitivity of Trackpad
+
+    sens=5;
+    screen_event_t screen_event = screen_event_get_event(event);
+    screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_TYPE, &screen_val);
+    switch (screen_val) {
+        case SCREEN_EVENT_JOYSTICK:
+            if (0 != screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_DISPLACEMENT, displacement)) {
+                ;
+            }
+            if (0 != screen_get_event_property_iv(screen_event, SCREEN_PROPERTY_BUTTONS, &button)) {
+                ;
+            }
+            if(button)
+                fprintf(stderr, "Trackpad pressed");
+
+            if (abs(displacement[0])>=sens || abs(displacement[1])>=sens){
+                if(abs(displacement[0]) > abs(displacement[1])) {
+                    if(displacement[0] > 0){
+                        char c[] = {0x1B,0x5B,'C'};
+                        if(bCtrlFlag)
+                            c[2] = 'c';
+                        write(masterFdG, c, 3);
+                    } else {
+                        char c[] = {0x1B,0x5B,'D'};
+                        if(bCtrlFlag)
+                            c[2] = 'd';
+                        write(masterFdG, c, 3);
+                    }
+                } else {
+                    if(displacement[1] > 0){
+                        char c[] = {0x1B,0x5B,'B'};
+                        write(masterFdG, c, 3);
+                    } else {
+                        char c[] = {0x1B,0x5B,'A'};
+                        write(masterFdG, c, 3);
+                    }
+                }
+
+                fprintf(stderr, "The x:'%4d', y:'%4d'\n", displacement[0],displacement[1]);
+	    }
+            break;
+        default:
+            break;
+    }
+
+}
+
+
 bool myEventFilter(void *message) {
 	// here we should have all requested bps events (no Qt events here)
     bps_event_t *event = (bps_event_t*)message;
+    handleTrackpadEvent(event); //Handle Trackpad events on Classic
     if (event) {
     	int domain = bps_event_get_domain(event);
     	if (domain == virtualkeyboard_get_domain()) {
